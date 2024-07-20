@@ -5,9 +5,7 @@ using Archipelagarten2.Items;
 using Archipelagarten2.Locations;
 using Archipelagarten2.Serialization;
 using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
-using KG2;
 using Newtonsoft.Json;
 
 namespace Archipelagarten2

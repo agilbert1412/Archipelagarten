@@ -29,7 +29,13 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
 
