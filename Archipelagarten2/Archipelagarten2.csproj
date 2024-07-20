@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Archipelagarten2</AssemblyName>
+    <Product>Archipelago Randomizer for Kindergarten 2</Product>
+    <Version>1.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>Archipelagarten2</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.2.0" />
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="UnityEngine.Modules" Version="2020.3.26" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="IdTables\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="IdTables\kindergarten_2_item_table.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="IdTables\kindergarten_2_location_table.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup Label="UserMacros">
+    <GamePath>..\..\Kindergarten 2 Debug\</GamePath>
+    <PluginsPath>$(GamePath)BepInEx\plugins\Archipelagarten\</PluginsPath>
+    <BepInExLauncher>Kindergarten2.exe</BepInExLauncher>
+  </PropertyGroup>
+
+  <Target Name="BeforeBuild">
+
+  </Target>
+  <Target Name="Copy mod to debug folder" AfterTargets="Build">
+    <Message Text="Copying the mod to the plugins folder $(OutputPath)$(ProjectName).dll -&gt; $(PluginsPath)" Importance="High" />
+    <Copy SourceFiles="$(OutputPath)$(ProjectName).dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
+    <Copy SourceFiles="$(OutputPath)$(ProjectName).pdb" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
+    <!-- <Copy SourceFiles="$(OutputPath)Newtonsoft.Json.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+    <Copy SourceFiles="$(OutputPath)Archipelago.MultiClient.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
+    <!--<Copy SourceFiles="$(OutputPath)Archipelago.Gifting.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+    <!--<Copy SourceFiles="$(OutputPath)websocket-sharp.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+    <!--<Copy SourceFiles="$(OutputPath)SpriteSheetRuntime.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+    <Copy SourceFiles="$(OutputPath)IdTables\kindergarten_2_item_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
+    <Copy SourceFiles="$(OutputPath)IdTables\kindergarten_2_location_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
+    <!--<Copy SourceFiles="$(OutputPath)Textures\Coins\cracked.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
+    <!--<Copy SourceFiles="$(OutputPath)Textures\Coins\piece.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
+    <!--<Copy SourceFiles="$(OutputPath)Textures\Coins\pile.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
+    <Message Text="Copied mod files" Importance="High" />
+  </Target>
+</Project>

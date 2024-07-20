@@ -1,0 +1,360 @@
+{
+    "items": {
+        "Bob's Toolbelt": {
+            "code": 1,
+            "classification": "progression"
+        },
+        "An A+": {
+            "code": 2,
+            "classification": "progression"
+        },
+        "Prestigious Pin": {
+            "code": 3,
+            "classification": "progression"
+        },
+        "Felix's Strange Chemical": {
+            "code": 4,
+            "classification": "progression"
+        },
+        "Penny's Laser Beam": {
+            "code": 5,
+            "classification": "progression"
+        },
+        "A Monstermon Plushie": {
+            "code": 6,
+            "classification": "progression"
+        },
+        "Carla's Laser Bomb": {
+            "code": 7,
+            "classification": "progression"
+        },
+        "Faculty Remote": {
+            "code": 8,
+            "classification": "progression"
+        },
+        "Progressive Starting Money": {
+            "code": 201,
+            "classification": "progression"
+        },
+        "Celestial Slug": {
+            "code": 301,
+            "classification": "progression"
+        },
+        "Hard Boogar": {
+            "code": 302,
+            "classification": "progression"
+        },
+        "Bucket O Water": {
+            "code": 303,
+            "classification": "progression"
+        },
+        "Pale Tuna": {
+            "code": 304,
+            "classification": "progression"
+        },
+        "Ultralodon": {
+            "code": 305,
+            "classification": "progression"
+        },
+        "Carnivorous Nimbus": {
+            "code": 306,
+            "classification": "progression"
+        },
+        "Tiny Squid": {
+            "code": 307,
+            "classification": "progression"
+        },
+        "Coral That Looks Like Hand": {
+            "code": 308,
+            "classification": "progression"
+        },
+        "Hermit Frog": {
+            "code": 309,
+            "classification": "progression"
+        },
+        "Castle Of Sand": {
+            "code": 310,
+            "classification": "progression"
+        },
+        "Man On Fire": {
+            "code": 311,
+            "classification": "progression"
+        },
+        "Chair of Spikes": {
+            "code": 312,
+            "classification": "progression"
+        },
+        "Cigaretmon": {
+            "code": 313,
+            "classification": "progression"
+        },
+        "Dune Worm": {
+            "code": 314,
+            "classification": "progression"
+        },
+        "Stressed Llama": {
+            "code": 315,
+            "classification": "progression"
+        },
+        "Cyclops Duckling": {
+            "code": 316,
+            "classification": "progression"
+        },
+        "Teenage Mutant Zombie": {
+            "code": 317,
+            "classification": "progression"
+        },
+        "Lonely Dragon": {
+            "code": 318,
+            "classification": "progression"
+        },
+        "Million-Head Hydra": {
+            "code": 319,
+            "classification": "progression"
+        },
+        "Dab Hero": {
+            "code": 320,
+            "classification": "progression"
+        },
+        "Monstrous Flytrap": {
+            "code": 321,
+            "classification": "progression"
+        },
+        "The Tallest Tree": {
+            "code": 322,
+            "classification": "progression"
+        },
+        "Chill Stump": {
+            "code": 323,
+            "classification": "progression"
+        },
+        "Gnome of Garden": {
+            "code": 324,
+            "classification": "progression"
+        },
+        "Ofaka Tornado": {
+            "code": 325,
+            "classification": "progression"
+        },
+        "Literally Grass": {
+            "code": 326,
+            "classification": "progression"
+        },
+        "Doodoo Bug": {
+            "code": 327,
+            "classification": "progression"
+        },
+        "Mystical Tomato": {
+            "code": 328,
+            "classification": "progression"
+        },
+        "Hissing Fauna": {
+            "code": 329,
+            "classification": "progression"
+        },
+        "Legendary Sword": {
+            "code": 330,
+            "classification": "progression"
+        },
+        "Golden Dewdrop": {
+            "code": 331,
+            "classification": "progression"
+        },
+        "Zen Octopus": {
+            "code": 332,
+            "classification": "progression"
+        },
+        "Forbidden Book": {
+            "code": 333,
+            "classification": "progression"
+        },
+        "Marshmallow": {
+            "code": 334,
+            "classification": "progression"
+        },
+        "Pot of Grease": {
+            "code": 335,
+            "classification": "progression"
+        },
+        "Lamb With Cleaver": {
+            "code": 336,
+            "classification": "progression"
+        },
+        "Treasure Chest": {
+            "code": 337,
+            "classification": "progression"
+        },
+        "Mr. Nice Guy": {
+            "code": 338,
+            "classification": "progression"
+        },
+        "The Slurper": {
+            "code": 339,
+            "classification": "progression"
+        },
+        "Rare Jewel": {
+            "code": 340,
+            "classification": "progression"
+        },
+        "Onion": {
+            "code": 341,
+            "classification": "progression"
+        },
+        "Killer Eye": {
+            "code": 342,
+            "classification": "progression"
+        },
+        "Purple Plush": {
+            "code": 343,
+            "classification": "progression"
+        },
+        "Spiky Flim Flam": {
+            "code": 344,
+            "classification": "progression"
+        },
+        "Monster Ghost": {
+            "code": 345,
+            "classification": "progression"
+        },
+        "Knight Who Turned Evil": {
+            "code": 346,
+            "classification": "progression"
+        },
+        "Evil Thwarter": {
+            "code": 347,
+            "classification": "progression"
+        },
+        "Mysterious Package": {
+            "code": 348,
+            "classification": "progression"
+        },
+        "Oglebop Ogre": {
+            "code": 349,
+            "classification": "progression"
+        },
+        "Dank Magician": {
+            "code": 350,
+            "classification": "progression"
+        },
+        "Outfit: Default": {
+            "code": 401,
+            "classification": "filler"
+        },
+        "Outfit: Nugget": {
+            "code": 402,
+            "classification": "filler"
+        },
+        "Outfit: Cindy": {
+            "code": 403,
+            "classification": "filler"
+        },
+        "Outfit: Ted": {
+            "code": 404,
+            "classification": "filler"
+        },
+        "Outfit: Carla": {
+            "code": 405,
+            "classification": "filler"
+        },
+        "Outfit: Monty": {
+            "code": 406,
+            "classification": "filler"
+        },
+        "Outfit: Felix": {
+            "code": 407,
+            "classification": "filler"
+        },
+        "Outfit: Ozzy": {
+            "code": 408,
+            "classification": "filler"
+        },
+        "Outfit: Penny": {
+            "code": 409,
+            "classification": "filler"
+        },
+        "Outfit: Lily": {
+            "code": 410,
+            "classification": "filler"
+        },
+        "Outfit: Billy": {
+            "code": 411,
+            "classification": "filler"
+        },
+        "Outfit: Jerome": {
+            "code": 412,
+            "classification": "filler"
+        },
+        "Outfit: Buggs": {
+            "code": 413,
+            "classification": "filler"
+        },
+        "Outfit: Lily (Undercover)": {
+            "code": 414,
+            "classification": "filler"
+        },
+        "Outfit: Billy (Undercover)": {
+            "code": 415,
+            "classification": "filler"
+        },
+        "Outfit: Ms.Applegate": {
+            "code": 416,
+            "classification": "filler"
+        },
+        "Outfit: Dr.Danner": {
+            "code": 417,
+            "classification": "filler"
+        },
+        "Outfit: The Janitor": {
+            "code": 418,
+            "classification": "filler"
+        },
+        "Outfit: Bob": {
+            "code": 419,
+            "classification": "filler"
+        },
+        "Outfit: Principal": {
+            "code": 420,
+            "classification": "filler"
+        },
+        "Outfit: Agnes": {
+            "code": 421,
+            "classification": "filler"
+        },
+        "Outfit: Lunch Lady": {
+            "code": 422,
+            "classification": "filler"
+        },
+        "Outfit: Hall Monitor": {
+            "code": 423,
+            "classification": "filler"
+        },
+        "Outfit: Stevie": {
+            "code": 424,
+            "classification": "filler"
+        },
+        "Outfit: Monster": {
+            "code": 425,
+            "classification": "filler"
+        },
+        "Outfit: Ron": {
+            "code": 426,
+            "classification": "filler"
+        },
+        "Outfit: Madison": {
+            "code": 427,
+            "classification": "filler"
+        },
+        "Outfit: Alice": {
+            "code": 428,
+            "classification": "filler"
+        },
+        "Outfit: Seasonal": {
+            "code": 429,
+            "classification": "filler"
+        },
+        "Outfit: Cultist": {
+            "code": 430,
+            "classification": "filler"
+        }
+    }
+}
