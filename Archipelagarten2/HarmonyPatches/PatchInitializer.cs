@@ -10,6 +10,7 @@ using HarmonyLib;
 using Archipelagarten2.HarmonyPatches.GenericPatches;
 using Archipelagarten2.HarmonyPatches.NPCPatches;
 using Archipelagarten2.HarmonyPatches.DebugPatches;
+using Archipelagarten2.HarmonyPatches.MoneyPatches;
 
 namespace Archipelagarten2.HarmonyPatches
 {
@@ -24,6 +25,7 @@ namespace Archipelagarten2.HarmonyPatches
             InitializeDebugPatches(logger);
             InitializeGenericPatches(logger, archipelago, locationChecker);
             InitializeNPCPatches(logger, archipelago, locationChecker);
+            InitializeMoneyPatches(logger, archipelago, locationChecker);
         }
 
         private static void InitializeDebugPatches(ManualLogSource logger)
@@ -53,6 +55,17 @@ namespace Archipelagarten2.HarmonyPatches
             CindyTissuePatch.Initialize(logger, archipelago, locationChecker);
             CarlaPoppedFirecrackerPatch.Initialize(logger, archipelago, locationChecker);
             SpareTheCatPatch.Initialize(logger, archipelago, locationChecker);
+        }
+
+        private static void InitializeMoneyPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        {
+            FelixGetFivePatch.Initialize(logger, archipelago, locationChecker);
+            FelixGetNickelPatch.Initialize(logger, archipelago, locationChecker);
+            GetNuggetCaveMoneyPatch.Initialize(logger, archipelago, locationChecker);
+            MontySellInhalerPatch.Initialize(logger, archipelago, locationChecker);
+            MontySellWeedMonstermonPatch.Initialize(logger, archipelago, locationChecker);
+            MontySellWeedPatch.Initialize(logger, archipelago, locationChecker);
+            TakeTedCubbyMoneyPatch.Initialize(logger, archipelago, locationChecker);
         }
     }
 }

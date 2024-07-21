@@ -40,7 +40,7 @@ namespace Archipelagarten2.Items
                 saveAtTime.Value.money += APItem.MONEY_AMOUNT;
             }
 
-            EnvironmentController.Instance.money += APItem.MONEY_AMOUNT;
+            EnvironmentController.Instance.GetMoney(APItem.MONEY_AMOUNT);
 
             return true;
         }

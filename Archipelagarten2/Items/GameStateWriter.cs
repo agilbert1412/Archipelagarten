@@ -45,10 +45,11 @@ namespace Archipelagarten2.Items
             if (_archipelago.SlotData.ShuffleMoney)
             {
                 environment.money = receivedMoney;
+                EnvironmentController.Instance.GetMoney(0);
             }
             else
             {
-                environment.money += receivedMoney;
+                EnvironmentController.Instance.GetMoney(receivedMoney);
             }
         }
 
