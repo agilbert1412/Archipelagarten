@@ -34,6 +34,11 @@ namespace Archipelagarten2.Items
                 return false;
             }
 
+            if (EnvironmentController.Instance == null || EnvironmentController.Instance.saves == null)
+            {
+                return true;
+            }
+
             var saves = EnvironmentController.Instance.saves;
             foreach (var saveAtTime in saves)
             {

@@ -23,7 +23,6 @@ namespace Archipelagarten2
 
         private PatchInitializer _patcherInitializer;
         private Harmony _harmony;
-        private SaveLoadManager _saveLoadManager;
         private ArchipelagoClient _archipelago;
         private ArchipelagoConnectionInfo APConnectionInfo { get; set; }
         private LocationChecker _locationChecker;
@@ -49,22 +48,28 @@ namespace Archipelagarten2
                 throw;
             }
 
-            Initialize();
+            InitializeBeforeConnection();
             ConnectToArchipelago();
+            InitializeAfterConnection();
 
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
         }
 
-        private void Initialize()
+        private void InitializeBeforeConnection()
         {
             _patcherInitializer = new PatchInitializer();
             _archipelago = new ArchipelagoClient(Logger, _harmony, OnItemReceived);
-            _saveLoadManager = new SaveLoadManager(Logger, _harmony, _archipelago);
+        }
+
+        private void InitializeAfterConnection()
+        {
             _locationChecker = new LocationChecker(Logger, _archipelago, new List<string>());
             _itemManager = new ItemManager(Logger, _archipelago);
-            _patcherInitializer.InitializeAllPatches(Logger, _harmony, _archipelago, _locationChecker);
+
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();
+            _itemManager.UpdateItemsAlreadyProcessed();
+            _patcherInitializer.InitializeAllPatches(Logger, _harmony, _archipelago, _locationChecker);
         }
 
         private void ConnectToArchipelago()
@@ -129,8 +134,6 @@ namespace Archipelagarten2
             {
                 return;
             }
-
-            Logger.LogDebug($"Received a new item!");
 
             _itemManager.ReceiveAllNewItems();
         }

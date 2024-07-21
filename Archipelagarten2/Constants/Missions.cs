@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KG2;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,6 +23,18 @@ namespace Archipelagarten2.Constants
             TALE_OF_JANITORS, FLOWERS_FOR_DIANA, HITMAN_GUARD,
             CAIN_NOT_ABLE, OPPOSITES_ATTRACT, DODGE_A_NUGGET,
             THINGS_GO_BOOM, BREAKING_SAD, CREATURE_FEATURE,
+        };
+
+        public static readonly Dictionary<Item, string> ItemToMissionMap = new()
+        {
+            {Item.APlus, FLOWERS_FOR_DIANA},
+            {Item.ApplesoftPin, HITMAN_GUARD},
+            {Item.Chemical, CAIN_NOT_ABLE},
+            {Item.LaserCutter, OPPOSITES_ATTRACT},
+            {Item.MonstermonPlushie, DODGE_A_NUGGET},
+            {Item.PennyController, BREAKING_SAD},
+            {Item.ToolBelt, TALE_OF_JANITORS},
+            {Item.UltraBomb, THINGS_GO_BOOM},
         };
     }
 }

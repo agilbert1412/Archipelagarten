@@ -34,7 +34,7 @@ namespace Archipelagarten2.Items
             environment.saveFile.UnlockedPin = _archipelago.HasReceivedItem("Prestigious Pin");
             environment.saveFile.UnlockedChemical = _archipelago.HasReceivedItem("Felix's Strange Chemical");
             environment.saveFile.UnlockedLaser = _archipelago.HasReceivedItem("Penny's Laser Beam");
-            environment.saveFile.UnlockedPlushie = _archipelago.HasReceivedItem("A MonstermonCards Plushie");
+            environment.saveFile.UnlockedPlushie = _archipelago.HasReceivedItem("A Monstermon Plushie");
             environment.saveFile.UnlockedBomb = _archipelago.HasReceivedItem("Carla's Laser Bomb");
             environment.saveFile.UnlockedRemote = _archipelago.HasReceivedItem("Faculty Remote");
         }

@@ -26,7 +26,7 @@ namespace Archipelagarten2.Items
         public void UpdateItemsAlreadyProcessed()
         {
             var allReceivedItems = _archipelago.GetAllReceivedItems();
-            _itemsAlreadyProcessedThisRun = new HashSet<ReceivedItem>();
+            _itemsAlreadyProcessedThisRun = new();
 
             foreach (var receivedItem in allReceivedItems)
             {

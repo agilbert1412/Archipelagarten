@@ -55,6 +55,7 @@ namespace Archipelagarten2.HarmonyPatches
             CindyTissuePatch.Initialize(logger, archipelago, locationChecker);
             CarlaPoppedFirecrackerPatch.Initialize(logger, archipelago, locationChecker);
             SpareTheCatPatch.Initialize(logger, archipelago, locationChecker);
+            CheckItemUnlockPatch.Initialize(logger, archipelago, locationChecker);
         }
 
         private static void InitializeMoneyPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
