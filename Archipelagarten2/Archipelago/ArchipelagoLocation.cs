@@ -18,7 +18,7 @@ namespace Archipelagarten2.Archipelago
 
         public static IEnumerable<ArchipelagoLocation> LoadLocations()
         {
-            var pathToLocationTable = Path.Combine("BepInEx", "plugins", "Kindergarchipelago", "IdTables", "kindergarten_2_location_table.json");
+            var pathToLocationTable = Path.Combine("BepInEx", "plugins", "Archipelagarten", "IdTables", "kindergarten_2_location_table.json");
             var jsonContent = File.ReadAllText(pathToLocationTable);
             var locationsTable = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(jsonContent);
             var locations = locationsTable["locations"];

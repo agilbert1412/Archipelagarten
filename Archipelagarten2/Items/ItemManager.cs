@@ -1,38 +1,37 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using Archipelagarten2.Archipelago;
 using BepInEx.Logging;
-using Newtonsoft.Json;
 
 namespace Archipelagarten2.Items
 {
     public class ItemManager
     {
-        private const string ITEM_PERSISTENCY_FILENAME = "ArchipelagoPersistency.json";
-
         private ManualLogSource _log;
         private ArchipelagoClient _archipelago;
-        private ArchipelagoNotificationsHandler _notificationHandler;
-        public ItemParser ItemParser { get; }
-        private HashSet<ReceivedItem> _itemsAlreadyProcessed;
+
+        // private ArchipelagoNotificationsHandler _notificationHandler;
+        private ItemParser ItemParser { get; }
         private HashSet<ReceivedItem> _itemsAlreadyProcessedThisRun;
 
-        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager)
+        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;
-            _notificationHandler = notificationHandler;
+            // _notificationHandler = notificationHandler;
 
-            ItemParser = new ItemParser(archipelago, trapManager);
-            _itemsAlreadyProcessed = LoadItemsAlreadyProcessedFromCampaign();
+            ItemParser = new ItemParser(archipelago);
             _itemsAlreadyProcessedThisRun = new HashSet<ReceivedItem>();
         }
 
-        public List<ReceivedItem> GetAllItemsAlreadyProcessed()
+        public void UpdateItemsAlreadyProcessed()
         {
-            return _itemsAlreadyProcessed.ToList();
+            var allReceivedItems = _archipelago.GetAllReceivedItems();
+            _itemsAlreadyProcessedThisRun = new HashSet<ReceivedItem>();
+
+            foreach (var receivedItem in allReceivedItems)
+            {
+                _itemsAlreadyProcessedThisRun.Add(receivedItem);
+            }
         }
 
         public void ReceiveAllNewItems()
@@ -51,66 +50,12 @@ namespace Archipelagarten2.Items
             {
                 return;
             }
-
-            var isNew = !_itemsAlreadyProcessed.Contains(receivedItem);
-            ItemParser.ProcessItem(receivedItem, isNew);
+            
+            ItemParser.ProcessItem(receivedItem);
             _itemsAlreadyProcessedThisRun.Add(receivedItem);
-
-            if (isNew)
-            {
-                _log.LogMessage($"Item received: {receivedItem.ItemName}");
-                _notificationHandler.AddItemNotification(receivedItem.ItemName);
-                _itemsAlreadyProcessed.Add(receivedItem);
-            }
-        }
-
-        private static MethodInfo GetSaveFilenameMethod = typeof(DLCSaveManager).GetMethod("GetSaveFilename", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static FieldInfo SaveDeviceField = typeof(DLCSaveManager).GetField("saveDevice", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        private string GetPersistencyFileName()
-        {
-            var saveFileName = (string)GetSaveFilenameMethod.Invoke(DLCSaveManager.Instance, new object[0]);
-            var itemPersistencyFile = saveFileName.Replace(".xml", "") + "_" + ITEM_PERSISTENCY_FILENAME;
-            return itemPersistencyFile; 
-        }
-
-        internal void SaveItemsAlreadyProcessedToCampaign()
-        {
-            var allItemsAlreadyProcessed = GetAllItemsAlreadyProcessed();
-            var itemsAsJson = JsonConvert.SerializeObject(allItemsAlreadyProcessed);
-            var saveDevice = (SaveDevice)SaveDeviceField.GetValue(DLCSaveManager.Instance);
-            saveDevice.Save(DLCSaveManager.Instance.DataSaveDirectory, GetPersistencyFileName(), (stream) =>
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.Write(itemsAsJson);
-                    writer.Flush();
-                }
-            });
-        }
-
-        private HashSet<ReceivedItem> LoadItemsAlreadyProcessedFromCampaign()
-        {
-            var saveDevice = (SaveDevice)SaveDeviceField.GetValue(DLCSaveManager.Instance);
-            var saveDirectory = DLCSaveManager.Instance.DataSaveDirectory;
-            var persistencyFileName = GetPersistencyFileName();
-            var fileExists = saveDevice.FileExists(saveDirectory, persistencyFileName);
-            if (!fileExists)
-            {
-                return new HashSet<ReceivedItem>();
-            }
-
-            string itemsAsJson = null;
-            saveDevice.Load(saveDirectory, persistencyFileName, (stream) =>
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    itemsAsJson = reader.ReadToEnd();
-                }
-            });
-
-            var itemsAlreadyProcessed = JsonConvert.DeserializeObject<List<ReceivedItem>>(itemsAsJson);
-            return new HashSet<ReceivedItem>(itemsAlreadyProcessed);
+            
+            _log.LogMessage($"Item Received: {receivedItem.ItemName}");
+            // _notificationHandler.AddItemNotification(receivedItem.ItemName);
         }
     }
 }

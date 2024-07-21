@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Archipelagarten2.Archipelago;
 using BepInEx.Logging;
@@ -7,15 +8,15 @@ namespace Archipelagarten2.Locations
 {
     public class LocationChecker
     {
-        private static ManualLogSource _console;
+        private static ManualLogSource _logger;
         private ArchipelagoClient _archipelago;
         private Dictionary<string, long> _checkedLocations;
 
-        public LocationChecker(ManualLogSource console, ArchipelagoClient archipelago, List<string> locationsAlreadyChecked)
+        public LocationChecker(ManualLogSource logger, ArchipelagoClient archipelago, List<string> locationsAlreadyChecked)
         {
-            _console = console;
+            _logger = logger;
             _archipelago = archipelago;
-            _checkedLocations = locationsAlreadyChecked.ToDictionary(x => x, _ => (long)-1);
+            _checkedLocations = locationsAlreadyChecked.ToDictionary(x => x, x => (long)-1);
         }
 
         public List<string> GetAllLocationsAlreadyChecked()
@@ -28,17 +29,17 @@ namespace Archipelagarten2.Locations
             return _checkedLocations.ContainsKey(locationName);
         }
 
-        public bool IsLocationMissing(string locationName)
+        public bool IsLocationNotChecked(string locationName)
         {
             return !IsLocationChecked(locationName);
         }
 
-        public bool IsLocationMissingAndExists(string locationName)
+        public bool IsLocationMissing(string locationName)
         {
-            return _archipelago.LocationExists(locationName) && IsLocationMissing(locationName);
+            return _archipelago.LocationExists(locationName) && IsLocationNotChecked(locationName);
         }
 
-        public void RememberCheckedLocation(string locationName)
+        public void AddCheckedLocation(string locationName)
         {
             if (_checkedLocations.ContainsKey(locationName))
             {
@@ -49,30 +50,18 @@ namespace Archipelagarten2.Locations
 
             if (locationId == -1)
             {
-                _console.LogError($"Location \"{locationName}\" could not be converted to an Archipelago id");
+                var alternateName = GetAllLocationsNotChecked().FirstOrDefault(x => x.Equals(locationName, StringComparison.InvariantCultureIgnoreCase));
+                if (alternateName == null)
+                {
+                    _logger.LogError($"Location \"{locationName}\" could not be converted to an Archipelago id");
+                    return;
+                }
+
+                locationId = _archipelago.GetLocationId(alternateName);
+                _logger.LogWarning($"Location \"{locationName}\" not found, checking location \"{alternateName}\" instead");
             }
 
-            _console.LogInfo($"Checking Location {locationName}!");
             _checkedLocations.Add(locationName, locationId);
-        }
-
-        public void RememberCheckedLocation(string[] locationNames)
-        {
-            foreach (var locationName in locationNames)
-            {
-                RememberCheckedLocation(locationName);
-            }
-        }
-
-        public void AddCheckedLocation(string[] locationNames)
-        {
-            RememberCheckedLocation(locationNames);
-            SendAllLocationChecks();
-        }
-
-        public void AddCheckedLocation(string locationName)
-        {
-            RememberCheckedLocation(locationName);
             SendAllLocationChecks();
         }
 
@@ -90,14 +79,7 @@ namespace Archipelagarten2.Locations
 
             allCheckedLocations = allCheckedLocations.Distinct().Where(x => x > -1).ToList();
 
-            if (_archipelago.HasReceivedItem("Day One Patch Pack", out _))
-            {
-                _archipelago.ReportCheckedLocationsAsync(allCheckedLocations.ToArray());
-            }
-            else
-            {
-                _archipelago.ReportCheckedLocations(allCheckedLocations.ToArray());
-            }
+            _archipelago.ReportCheckedLocations(allCheckedLocations.ToArray());
         }
 
         public void VerifyNewLocationChecksWithArchipelago()
@@ -105,18 +87,16 @@ namespace Archipelagarten2.Locations
             var allCheckedLocations = _archipelago.GetAllCheckedLocations();
             foreach (var checkedLocation in allCheckedLocations)
             {
-                var locationName = checkedLocation.Key;
-                var locationId = checkedLocation.Value;
-                if (!_checkedLocations.ContainsKey(locationName))
+                if (!_checkedLocations.ContainsKey(checkedLocation.Key))
                 {
-                    _checkedLocations.Add(locationName, locationId);
+                    _checkedLocations.Add(checkedLocation.Key, checkedLocation.Value);
                 }
             }
         }
 
         private void TryToIdentifyUnknownLocationNames()
         {
-            foreach (var locationName in _checkedLocations.Keys.ToArray())
+            foreach (var locationName in _checkedLocations.Keys)
             {
                 if (_checkedLocations[locationName] > -1)
                 {
@@ -144,6 +124,17 @@ namespace Archipelagarten2.Locations
 
                 _checkedLocations.Remove(location);
             }
+        }
+
+        public IEnumerable<string> GetAllLocationsNotChecked()
+        {
+            if (!_archipelago.IsConnected)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            return _archipelago.Session.Locations.AllMissingLocations.Select(_archipelago.GetLocationName)
+                .Where(x => x != null);
         }
     }
 }

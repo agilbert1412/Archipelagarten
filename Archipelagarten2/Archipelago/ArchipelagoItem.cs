@@ -21,7 +21,7 @@ namespace Archipelagarten2.Archipelago
 
         public static IEnumerable<ArchipelagoItem> LoadItems()
         {
-            var pathToItemTable = Path.Combine("BepInEx", "plugins", "Kindergarchipelago", "IdTables", "kindergarten_2_item_table.json");
+            var pathToItemTable = Path.Combine("BepInEx", "plugins", "Archipelagarten", "IdTables", "kindergarten_2_item_table.json");
             var jsonContent = File.ReadAllText(pathToItemTable);
             var itemsTable = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(jsonContent);
             var items = itemsTable["items"];

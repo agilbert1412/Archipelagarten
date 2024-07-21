@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.HarmonyPatches;
 using Archipelagarten2.Items;
 using Archipelagarten2.Locations;
+using Archipelagarten2.Patching;
 using Archipelagarten2.Serialization;
 using BepInEx;
 using HarmonyLib;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Archipelagarten2
 {
@@ -15,7 +21,9 @@ namespace Archipelagarten2
     {
         public static Plugin Instance;
 
+        private PatchInitializer _patcherInitializer;
         private Harmony _harmony;
+        private SaveLoadManager _saveLoadManager;
         private ArchipelagoClient _archipelago;
         private ArchipelagoConnectionInfo APConnectionInfo { get; set; }
         private LocationChecker _locationChecker;
@@ -26,8 +34,12 @@ namespace Archipelagarten2
             // Plugin startup logic
             Logger.LogInfo($"Loading {MyPluginInfo.PLUGIN_GUID}...");
 
+            Debugger.Break();
+
             try
             {
+                TypeAccess.Initialize(Logger);
+                DebugLogging.Initialize(Logger);
                 _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
                 _harmony.PatchAll();
             }
@@ -37,10 +49,22 @@ namespace Archipelagarten2
                 throw;
             }
 
-            _archipelago = new ArchipelagoClient(Logger, OnItemReceived);
+            Initialize();
             ConnectToArchipelago();
 
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+        }
+
+        private void Initialize()
+        {
+            _patcherInitializer = new PatchInitializer();
+            _archipelago = new ArchipelagoClient(Logger, _harmony, OnItemReceived);
+            _saveLoadManager = new SaveLoadManager(Logger, _harmony, _archipelago);
+            _locationChecker = new LocationChecker(Logger, _archipelago, new List<string>());
+            _itemManager = new ItemManager(Logger, _archipelago);
+            _patcherInitializer.InitializeAllPatches(Logger, _harmony, _archipelago, _locationChecker);
+            _locationChecker.VerifyNewLocationChecksWithArchipelago();
+            _locationChecker.SendAllLocationChecks();
         }
 
         private void ConnectToArchipelago()
@@ -56,11 +80,12 @@ namespace Archipelagarten2
             if (!_archipelago.IsConnected)
             {
                 APConnectionInfo = null;
-                var userMessage =
-                    $"Could not connect to archipelago. Please verify the connection file ({Persistency.CONNECTION_FILE}) and that the server is available.";
+                var userMessage = $"Could not connect to archipelago. Please verify the connection file ({Persistency.CONNECTION_FILE}) and that the server is available.{Environment.NewLine}";
                 Logger.LogError(userMessage);
-                Console.ReadKey();
-                Environment.Exit(0);
+                const int timeUntilClose = 10;
+                Logger.LogError($"The Game will close in {timeUntilClose} seconds");
+                Thread.Sleep(timeUntilClose * 1000);
+                Application.Quit();
                 return;
             }
             
@@ -104,6 +129,8 @@ namespace Archipelagarten2
             {
                 return;
             }
+
+            Logger.LogDebug($"Received a new item!");
 
             _itemManager.ReceiveAllNewItems();
         }

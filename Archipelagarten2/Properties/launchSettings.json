@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Archipelagarten 2": {
+      "commandName": "Executable",
+      "executablePath": "..\\Kindergarten 2 Debug\\Kindergarten2.exe",
+      "workingDirectory": "..\\..\\Kindergarten 2 Debug"
+    }
+  }
+}

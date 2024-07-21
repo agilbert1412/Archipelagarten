@@ -23,7 +23,7 @@ namespace Archipelagarten2.Archipelago
         public bool ShuffleMonstermon { get; private set; }
         public bool ShuffleOutfits { get; private set; }
         public bool DeathLink { get; private set; }
-        public string Seed { get; private set; }
+        public int Seed { get; private set; }
         public string MultiworldVersion { get; private set; }
 
         public SlotData(string slotName, Dictionary<string, object> slotDataFields, ManualLogSource console)
@@ -37,7 +37,7 @@ namespace Archipelagarten2.Archipelago
             ShuffleMonstermon = GetSlotSetting(SHUFFLE_MONSTERMON_KEY, true);
             ShuffleOutfits = GetSlotSetting(SHUFFLE_OUTFITS_KEY, false);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
-            Seed = GetSlotSetting(SEED_KEY, "0");
+            Seed = GetSlotSetting(SEED_KEY, 0);
             MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
         }
 
