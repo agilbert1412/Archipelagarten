@@ -21,7 +21,16 @@ namespace Archipelagarten2.Items
 
         public void ProcessItem(string itemName)
         {
+            if (EnvironmentController.Instance == null || EnvironmentController.Instance.saves == null)
+            {
+                return;
+            }
+
             if (TryHandleMoney(itemName))
+            {
+                return;
+            }
+            if (TryHandlePocketChange(itemName))
             {
                 return;
             }
@@ -34,20 +43,34 @@ namespace Archipelagarten2.Items
                 return false;
             }
 
-            if (EnvironmentController.Instance == null || EnvironmentController.Instance.saves == null)
+            var moneyAmount = Math.Max(1, _archipelago.SlotData.ShuffleMoney);
+            AddMoney(moneyAmount);
+
+            return true;
+        }
+
+        private bool TryHandlePocketChange(string itemName)
+        {
+            if (!itemName.Equals(APItem.POCKET_CHANGE, StringComparison.InvariantCultureIgnoreCase))
             {
-                return true;
+                return false;
             }
 
+            var moneyAmount = Math.Max(1, _archipelago.SlotData.ShuffleMoney) * APItem.POCKET_CHANGE_MULTIPLIER;
+            AddMoney(moneyAmount);
+
+            return true;
+        }
+
+        private static void AddMoney(float moneyAmount)
+        {
             var saves = EnvironmentController.Instance.saves;
             foreach (var saveAtTime in saves)
             {
-                saveAtTime.Value.money += APItem.MONEY_AMOUNT;
+                saveAtTime.Value.money += moneyAmount;
             }
 
-            EnvironmentController.Instance.GetMoney(APItem.MONEY_AMOUNT);
-
-            return true;
+            EnvironmentController.Instance.GetMoney(moneyAmount);
         }
     }
 }

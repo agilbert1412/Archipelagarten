@@ -29,7 +29,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
         {
             try
             {
-                if (!_archipelago.SlotData.ShuffleMoney)
+                if (_archipelago.SlotData.ShuffleMoney < 1)
                 {
                     return true; // run original logic
                 }

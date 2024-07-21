@@ -19,7 +19,7 @@ namespace Archipelagarten2.Archipelago
 
         public string SlotName { get; private set; }
         public Goal Goal { get; private set; }
-        public bool ShuffleMoney { get; private set; }
+        public int ShuffleMoney { get; private set; }
         public bool ShuffleMonstermon { get; private set; }
         public bool ShuffleOutfits { get; private set; }
         public bool DeathLink { get; private set; }
@@ -33,7 +33,7 @@ namespace Archipelagarten2.Archipelago
             _console = console;
 
             Goal = GetSlotSetting(GOAL_KEY, Goal.CreatureFeature);
-            ShuffleMoney = GetSlotSetting(SHUFFLE_MONEY_KEY, true);
+            ShuffleMoney = GetSlotSetting(SHUFFLE_MONEY_KEY, 1);
             ShuffleMonstermon = GetSlotSetting(SHUFFLE_MONSTERMON_KEY, true);
             ShuffleOutfits = GetSlotSetting(SHUFFLE_OUTFITS_KEY, false);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);

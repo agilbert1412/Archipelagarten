@@ -1,6 +1,7 @@
 ﻿using Archipelagarten2.Archipelago;
 using Archipelagarten2.Constants;
 using KG2;
+using System;
 
 namespace Archipelagarten2.Items
 {
@@ -41,16 +42,24 @@ namespace Archipelagarten2.Items
 
         private void SetMoney(EnvironmentController environment)
         {
-            var receivedMoney = _archipelago.GetReceivedItemCount(APItem.MONEY) * APItem.MONEY_AMOUNT;
-            if (_archipelago.SlotData.ShuffleMoney)
+            if (_archipelago.SlotData.ShuffleMoney > 0)
             {
-                environment.money = receivedMoney;
+                environment.money = GetReceivedMoney(_archipelago.SlotData.ShuffleMoney);
                 EnvironmentController.Instance.GetMoney(0);
             }
             else
             {
-                EnvironmentController.Instance.GetMoney(receivedMoney);
+                EnvironmentController.Instance.GetMoney(GetReceivedMoney(1));
             }
+        }
+
+        private float GetReceivedMoney(int shuffleMoneyValue)
+        {
+            var receivedMoney = _archipelago.GetReceivedItemCount(APItem.MONEY);
+            var receivedPocketChange = _archipelago.GetReceivedItemCount(APItem.POCKET_CHANGE);
+            var moneyPerMoney = shuffleMoneyValue;
+            var moneyPerPocketChange = moneyPerMoney * APItem.POCKET_CHANGE_MULTIPLIER;
+            return (receivedMoney * moneyPerMoney) + (receivedPocketChange * moneyPerPocketChange);
         }
 
         private void SetMonstermonCards(EnvironmentController environment)
