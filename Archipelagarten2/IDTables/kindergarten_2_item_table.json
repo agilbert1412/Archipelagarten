@@ -36,6 +36,10 @@
             "code": 201,
             "classification": "progression"
         },
+        "Pocket Change": {
+            "code": 202,
+            "classification": "progression"
+        },
         "Celestial Slug": {
             "code": 301,
             "classification": "progression"
@@ -354,6 +358,10 @@
         },
         "Outfit: Cultist": {
             "code": 430,
+            "classification": "filler"
+        },
+        "Nothing": {
+            "code": 501,
             "classification": "filler"
         }
     }
