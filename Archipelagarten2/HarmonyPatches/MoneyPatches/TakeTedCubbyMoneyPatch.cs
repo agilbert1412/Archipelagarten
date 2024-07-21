@@ -30,6 +30,11 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
         {
             try
             {
+                if (!_archipelago.SlotData.ShuffleMoney)
+                {
+                    return true; // run original logic
+                }
+
                 DebugLogging.LogDebugPatchIsRunning(nameof(ObjectInteractable), "TakeCubbyMoney", nameof(TakeTedCubbyMoneyPatch), nameof(Prefix));
 
                 GameObject.Find("MoneyInCubby").GetComponent<SpriteRenderer>().enabled = false;

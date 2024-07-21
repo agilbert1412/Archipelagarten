@@ -29,6 +29,11 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
         {
             try
             {
+                if (!_archipelago.SlotData.ShuffleMoney)
+                {
+                    return true; // run original logic
+                }
+
                 DebugLogging.LogDebugPatchIsRunning(nameof(Monty), "SellWeed", nameof(MontySellWeedPatch), nameof(Prefix));
 
                 EnvironmentController.Instance.UseItem(Item.BagOfWeed);

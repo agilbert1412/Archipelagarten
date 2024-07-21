@@ -8,8 +8,8 @@ using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.NPCPatches
 {
-    [HarmonyPatch(typeof(Agnes))]
-    [HarmonyPatch(nameof(Agnes.Interact))]
+    [HarmonyPatch(typeof(NPCBehavior))]
+    [HarmonyPatch(nameof(NPCBehavior.Interact))]
     public static class TalkToAgnesPatch
     {
         private static ManualLogSource _logger;
@@ -24,11 +24,16 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
         }
 
         // public override void Interact()
-        public static void Postfix(Agnes __instance)
+        public static void Postfix(NPCBehavior __instance)
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(Agnes), nameof(Agnes.Interact), nameof(TalkToAgnesPatch), nameof(Postfix));
+                if (__instance is not Agnes agnes)
+                {
+                    return;
+                }
+
+                DebugLogging.LogDebugPatchIsRunning(nameof(NPCBehavior), nameof(NPCBehavior.Interact), nameof(TalkToAgnesPatch), nameof(Postfix));
                 
                 _locationChecker.AddCheckedLocation("Meet A Dumpster Hag");
 

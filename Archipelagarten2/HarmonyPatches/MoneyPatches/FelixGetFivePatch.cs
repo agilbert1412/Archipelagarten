@@ -29,6 +29,11 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
         {
             try
             {
+                if (!_archipelago.SlotData.ShuffleMoney)
+                {
+                    return true; // run original logic
+                }
+
                 DebugLogging.LogDebugPatchIsRunning(nameof(Felix), "GetFive", nameof(FelixGetFivePatch), nameof(Prefix));
 
                 _locationChecker.AddCheckedLocation("Borrow Money From Felix");

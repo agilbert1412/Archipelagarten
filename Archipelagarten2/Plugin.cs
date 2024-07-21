@@ -38,8 +38,8 @@ namespace Archipelagarten2
 
             try
             {
-                TypeAccess.Initialize(Logger);
                 DebugLogging.Initialize(Logger);
+                TypeAccess.Initialize();
                 _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
                 _harmony.PatchAll();
             }

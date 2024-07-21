@@ -48,6 +48,7 @@ namespace Archipelagarten2.HarmonyPatches
         private static void InitializeNPCPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             BobCheckStatusPatch.Initialize(logger, archipelago, locationChecker);
+            BobKissingPatch.Initialize(logger, archipelago, locationChecker);
             PrincipalSendToRecessPatch.Initialize(logger, archipelago, locationChecker);
             ScienceTeacherReturnToStudyHallPatch.Initialize(logger, archipelago, locationChecker);
             TalkToAgnesPatch.Initialize(logger, archipelago, locationChecker);
