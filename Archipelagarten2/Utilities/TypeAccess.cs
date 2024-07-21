@@ -4,15 +4,12 @@ using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
 
-namespace Archipelagarten2.Patching
+namespace Archipelagarten2.Utilities
 {
     public static class TypeAccess
     {
-        private static ManualLogSource _logger;
-
-        public static void Initialize(ManualLogSource logger)
+        public static void Initialize()
         {
-            _logger = logger;
         }
 
         public static Type TypeByName(string name)
@@ -23,7 +20,7 @@ namespace Archipelagarten2.Patching
             if ((object)type == null)
                 type = AllTypes().FirstOrDefault(t => t.Name == name);
             if ((object)type == null)
-                _logger.LogError("TypeAccess.TypeByName: Could not find type named " + name);
+                DebugLogging.LogErrorMessage("TypeAccess.TypeByName: Could not find type named " + name);
             return type;
         }
 
@@ -39,7 +36,7 @@ namespace Archipelagarten2.Patching
             }
             catch (ReflectionTypeLoadException ex)
             {
-                _logger.LogError($"TypeAccess.GetTypesFromAssembly: assembly {assembly} => {ex}");
+                DebugLogging.LogErrorMessage($"TypeAccess.GetTypesFromAssembly: assembly {assembly} => {ex}");
                 return ex.Types.Where(type => type != null).ToArray();
             }
         }

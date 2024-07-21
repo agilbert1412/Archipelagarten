@@ -1,7 +1,7 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.Locations;
-using Archipelagarten2.Patching;
+using Archipelagarten2.Utilities;
 using BepInEx.Logging;
 using HarmonyLib;
 using KG2;
@@ -36,7 +36,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed in {nameof(PrincipalSendToRecessPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                DebugLogging.LogErrorException(nameof(PrincipalSendToRecessPatch), nameof(Postfix), ex);
                 return;
             }
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.Utilities;
 using BepInEx.Logging;
 
 namespace Archipelagarten2.Locations
@@ -53,7 +54,7 @@ namespace Archipelagarten2.Locations
                 var alternateName = GetAllLocationsNotChecked().FirstOrDefault(x => x.Equals(locationName, StringComparison.InvariantCultureIgnoreCase));
                 if (alternateName == null)
                 {
-                    _logger.LogError($"Location \"{locationName}\" could not be converted to an Archipelago id");
+                    DebugLogging.LogErrorMessage($"Location \"{locationName}\" could not be converted to an Archipelago id");
                     return;
                 }
 

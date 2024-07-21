@@ -2,7 +2,7 @@
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.Constants;
 using Archipelagarten2.Locations;
-using Archipelagarten2.Patching;
+using Archipelagarten2.Utilities;
 using BepInEx.Logging;
 using HarmonyLib;
 using KG2;
@@ -50,7 +50,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed in {nameof(UnlockMonstermonPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                DebugLogging.LogErrorException(nameof(UnlockMonstermonPatch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Archipelagarten2.Utilities;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.Enums;
@@ -65,7 +66,7 @@ namespace Archipelagarten2.Archipelago
 
             var genericVersion = SlotData.MultiworldVersion.Replace("0", "x");
             errorMessage = $"This Multiworld has been created for Archipelagarten version {genericVersion}, but this is Archipelagarten version {MyPluginInfo.PLUGIN_VERSION}.\nPlease update to a compatible mod version.";
-            _logger.LogError(errorMessage);
+            DebugLogging.LogErrorMessage(errorMessage);
             DisconnectPermanently();
             return;
         }
@@ -85,7 +86,7 @@ namespace Archipelagarten2.Archipelago
             {
                 var message = e.GetBaseException().Message;
                 result = new LoginFailure(message);
-                _logger.LogError($"An error occured trying to connect to archipelago. Message: {message}");
+                DebugLogging.LogErrorMessage($"An error occured trying to connect to archipelago. Message: {message}");
             }
 
             if (!result.Successful)
@@ -103,7 +104,7 @@ namespace Archipelagarten2.Archipelago
                     detailedErrorMessage += $"\n    {error}";
                 }
 
-                _logger.LogError(detailedErrorMessage);
+                DebugLogging.LogErrorMessage(detailedErrorMessage);
                 DisconnectAndCleanup();
                 return false; // Did not connect, show the user the contents of `errorMessage`
             }
@@ -471,7 +472,7 @@ namespace Archipelagarten2.Archipelago
             {
                 if (required)
                 {
-                    _logger.LogError(
+                    DebugLogging.LogErrorMessage(
                         $"Failed at getting the location name for location {locationId}. This is probably due to a corrupted datapackage. Unexpected behaviors may follow");
                 }
 
@@ -538,7 +539,7 @@ namespace Archipelagarten2.Archipelago
 
             if (string.IsNullOrWhiteSpace(itemName))
             {
-                _logger.LogError($"Failed at getting the item name for item {itemId}. This is probably due to a corrupted datapackage. Unexpected behaviors may follow");
+                DebugLogging.LogErrorMessage($"Failed at getting the item name for item {itemId}. This is probably due to a corrupted datapackage. Unexpected behaviors may follow");
                 return "Error Item";
             }
 
@@ -647,14 +648,14 @@ namespace Archipelagarten2.Archipelago
 
         private void SessionErrorReceived(Exception e, string message)
         {
-            _logger.LogError(message);
+            DebugLogging.LogErrorMessage(message);
             _lastConnectFailure = DateTime.Now;
             DisconnectAndCleanup();
         }
 
         private void SessionSocketClosed(string reason)
         {
-            _logger.LogError($"Connection to Archipelago lost: {reason}");
+            DebugLogging.LogErrorMessage($"Connection to Archipelago lost:", reason);
             _lastConnectFailure = DateTime.Now;
             DisconnectAndCleanup();
         }

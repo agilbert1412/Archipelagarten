@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.Items;
-using Archipelagarten2.Patching;
 using BepInEx.Logging;
 using HarmonyLib;
 using Archipelagarten2.HarmonyPatches.GenericPatches;

@@ -2,7 +2,7 @@
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.HarmonyPatches.NPCPatches;
 using Archipelagarten2.Locations;
-using Archipelagarten2.Patching;
+using Archipelagarten2.Utilities;
 using BepInEx.Logging;
 using HarmonyLib;
 using KG2;
@@ -38,7 +38,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed in {nameof(MontySellWeedPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                DebugLogging.LogErrorException(nameof(MontySellWeedPatch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

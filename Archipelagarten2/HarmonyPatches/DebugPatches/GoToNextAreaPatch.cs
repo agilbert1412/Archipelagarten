@@ -1,5 +1,5 @@
 ﻿using System;
-using Archipelagarten2.Patching;
+using Archipelagarten2.Utilities;
 using BepInEx.Logging;
 using HarmonyLib;
 using KG2;
@@ -28,7 +28,7 @@ namespace Archipelagarten2.HarmonyPatches.DebugPatches
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed in {nameof(GoToNextAreaPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                DebugLogging.LogErrorException(nameof(GoToNextAreaPatch), nameof(Postfix), ex);
                 return;
             }
         }
