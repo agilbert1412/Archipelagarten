@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.Death;
 using Archipelagarten2.Items;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -25,6 +26,7 @@ namespace Archipelagarten2.HarmonyPatches
             InitializeGenericPatches(logger, archipelago, locationChecker);
             InitializeNPCPatches(logger, archipelago, locationChecker);
             InitializeMoneyPatches(logger, archipelago, locationChecker);
+            InitializeDeathPatches(logger, archipelago, locationChecker);
         }
 
         private static void InitializeDebugPatches(ManualLogSource logger)
@@ -67,6 +69,12 @@ namespace Archipelagarten2.HarmonyPatches
             MontySellWeedMonstermonPatch.Initialize(logger, archipelago, locationChecker);
             MontySellWeedPatch.Initialize(logger, archipelago, locationChecker);
             TakeTedCubbyMoneyPatch.Initialize(logger, archipelago, locationChecker);
+        }
+
+        private static void InitializeDeathPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        {
+            CallDeathPatch.Initialize(logger, archipelago, locationChecker);
+            DeathMessagePatch.Initialize(logger, archipelago, locationChecker);
         }
     }
 }

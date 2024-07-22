@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Archipelagarten2.Characters;
+using Archipelagarten2.Death;
 using Archipelagarten2.Utilities;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
@@ -13,6 +15,8 @@ using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using BepInEx.Logging;
 using HarmonyLib;
+using KG2;
+using Object = UnityEngine.Object;
 
 namespace Archipelagarten2.Archipelago
 {
@@ -23,6 +27,7 @@ namespace Archipelagarten2.Archipelago
         private ManualLogSource _logger;
         private ArchipelagoSession _session;
         private DeathLinkService _deathLinkService;
+        private CharacterActions _characterActions;
 
         private Harmony _harmony;
 
@@ -39,10 +44,11 @@ namespace Archipelagarten2.Archipelago
 
         private DataPackageCache _localDataPackage;
 
-        public ArchipelagoClient(ManualLogSource logger, Harmony harmony, Action itemReceivedFunction)
+        public ArchipelagoClient(ManualLogSource logger, Harmony harmony, CharacterActions characterActions, Action itemReceivedFunction)
         {
             _logger = logger;
             _harmony = harmony;
+            _characterActions = characterActions;
             _itemReceivedFunction = itemReceivedFunction;
             IsConnected = false;
             ScoutedLocations = new Dictionary<string, ScoutedLocation>();
@@ -546,14 +552,14 @@ namespace Archipelagarten2.Archipelago
             return itemName;
         }
 
-        public void SendDeathLink(string player, string reason = "Unknown cause")
+        public void SendDeathLink(string reason = "Unknown cause")
         {
             if (!MakeSureConnected())
             {
                 return;
             }
 
-            _deathLinkService.SendDeathLink(new DeathLink(player, reason));
+            _deathLinkService.SendDeathLink(new DeathLink(GetPlayerName(), reason));
         }
 
         private void ReceiveDeathLink(DeathLink deathlink)
@@ -565,6 +571,10 @@ namespace Archipelagarten2.Archipelago
 
             var deathLinkMessage = $"You have been killed by {deathlink.Source} ({deathlink.Cause})";
             _logger.LogInfo(deathLinkMessage);
+
+            DeathMessagePatch.SetPlayerName(deathlink.Source);
+            var deathLinkPlayerKiller = new PlayerKiller(_characterActions, true);
+            deathLinkPlayerKiller.KillInSpecificWay(deathlink.Cause);
         }
 
         public ScoutedLocation ScoutSingleLocation(string locationName, bool createAsHint = false)

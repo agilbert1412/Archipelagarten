@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.Characters;
 using Archipelagarten2.HarmonyPatches;
 using Archipelagarten2.Items;
 using Archipelagarten2.Locations;
@@ -27,6 +28,7 @@ namespace Archipelagarten2
         private ArchipelagoConnectionInfo APConnectionInfo { get; set; }
         private LocationChecker _locationChecker;
         private ItemManager _itemManager;
+        private CharacterActions _characterActions;
 
         private void Awake()
         {
@@ -58,13 +60,14 @@ namespace Archipelagarten2
         private void InitializeBeforeConnection()
         {
             _patcherInitializer = new PatchInitializer();
-            _archipelago = new ArchipelagoClient(Logger, _harmony, OnItemReceived);
+            _characterActions = new CharacterActions();
+            _archipelago = new ArchipelagoClient(Logger, _harmony, _characterActions, OnItemReceived);
         }
 
         private void InitializeAfterConnection()
         {
             _locationChecker = new LocationChecker(Logger, _archipelago, new List<string>());
-            _itemManager = new ItemManager(Logger, _archipelago);
+            _itemManager = new ItemManager(Logger, _archipelago, _characterActions);
 
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();

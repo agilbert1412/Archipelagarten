@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.Characters;
 using BepInEx.Logging;
 
 namespace Archipelagarten2.Items
@@ -13,13 +14,13 @@ namespace Archipelagarten2.Items
         private ItemParser ItemParser { get; }
         private HashSet<ReceivedItem> _itemsAlreadyProcessedThisRun;
 
-        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago)
+        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago, CharacterActions characterActions)
         {
             _log = log;
             _archipelago = archipelago;
             // _notificationHandler = notificationHandler;
 
-            ItemParser = new ItemParser(archipelago);
+            ItemParser = new ItemParser(archipelago, characterActions);
             _itemsAlreadyProcessedThisRun = new HashSet<ReceivedItem>();
         }
 

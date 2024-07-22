@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Archipelagarten2</AssemblyName>
     <Product>Archipelago Randomizer for Kindergarten 2</Product>
-    <Version>0.1.0</Version>
+    <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="IdTables\" />
-    <Folder Include="Deathlink\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +36,18 @@
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween43">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween43.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween46">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween50">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween50.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.dll</HintPath>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BepInEx.Logging;
+using DG.Tweening;
 
 namespace Archipelagarten2.Utilities
 {
@@ -20,9 +21,19 @@ namespace Archipelagarten2.Utilities
 #endif
         }
 
+        public static void LogDebug(string message, params object[] arguments)
+        {
+            _logger.LogDebug($"{message}\n\t{GenerateArgumentsString(arguments)})");
+        }
+
         public static void LogErrorException(Exception ex, params object[] arguments)
         {
             _logger.LogError($"Exception Thrown:\n\t{ex}\n\t{GenerateArgumentsString(arguments)}");
+        }
+
+        public static void LogWarningException(Exception ex, params object[] arguments)
+        {
+            _logger.LogWarning($"Exception Thrown:\n\t{ex}\n\t{GenerateArgumentsString(arguments)}");
         }
 
         public static void LogErrorMessage(string message, params object[] arguments)

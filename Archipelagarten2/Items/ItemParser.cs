@@ -1,6 +1,8 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.Characters;
 using Archipelagarten2.Constants;
+using Archipelagarten2.Death;
 using KG2;
 
 namespace Archipelagarten2.Items
@@ -8,10 +10,12 @@ namespace Archipelagarten2.Items
     public class ItemParser
     {
         private ArchipelagoClient _archipelago;
+        private TrapManager _trapManager;
 
-        public ItemParser(ArchipelagoClient archipelago)
+        public ItemParser(ArchipelagoClient archipelago, CharacterActions characterActions)
         {
             _archipelago = archipelago;
+            _trapManager = new TrapManager(characterActions);
         }
 
         public void ProcessItem(ReceivedItem item)
@@ -30,7 +34,13 @@ namespace Archipelagarten2.Items
             {
                 return;
             }
+
             if (TryHandlePocketChange(itemName))
+            {
+                return;
+            }
+
+            if (_trapManager.TryHandleTrap(itemName))
             {
                 return;
             }
