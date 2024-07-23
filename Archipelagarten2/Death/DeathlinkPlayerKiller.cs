@@ -521,7 +521,12 @@ namespace Archipelagarten2.Death
         private void DieByBees()
         {
             var playerController = Object.FindObjectOfType<PlayerController>();
+            playerController.SetPlayerState(PlayerState.AnimState);
+            CallBees(playerController);
+        }
 
+        private void CallBees(PlayerController playerController)
+        {
             GameObject bees = GameObject.Find("BeesObject");
             GameObject.Find("BeesRoot").GetComponent<Animator>().speed = 2f;
             AudioController.instance.PlaySound("Bees");
