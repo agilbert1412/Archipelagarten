@@ -633,6 +633,7 @@ namespace Archipelagarten2.Death
             scienceTeacher.GetComponentInChildren<Animator>().SetBool(nameof(ScienceTeacher.Shoot), true);
             scienceTeacher.GetComponentInChildren<AnimationEvents>().SetTargetCharacter("Player");
             CallDeathUi(scienceTeacher, killId, 3f);
+            scienceTeacher.GetComponentInChildren<Animator>().SetBool("Shoot", false);
         }
 
         private void CallDeathUi(Interactable interactable, int killId)
