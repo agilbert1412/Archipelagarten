@@ -1,7 +1,5 @@
 ﻿using KG2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Archipelagarten2.Constants
 {

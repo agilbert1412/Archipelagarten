@@ -1,9 +1,8 @@
 ﻿using System;
-using Archipelagarten2.Archipelago;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.NPCPatches
@@ -12,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
     [HarmonyPatch(nameof(ScienceTeacher.ReturnToStudyHall))]
     public static class ScienceTeacherReturnToStudyHallPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -33,7 +32,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
                 var xIsCorrect = playerPosition.x > 0.44999998807907104 && playerPosition.x < 0.64999997615814209;
                 var yIsCorrect = playerPosition.y > -0.699999988079071 && playerPosition.y < -0.34999999403953552;
                 var playerIsInCorrectSpot = xIsCorrect && yIsCorrect;
-                DebugLogging.LogDebugPatchIsRunning(nameof(ScienceTeacher), nameof(ScienceTeacher.ReturnToStudyHall), nameof(ScienceTeacherReturnToStudyHallPatch), nameof(Postfix), playerWasInStudyHall, playerIsInCorrectSpot);
+                _logger.LogDebugPatchIsRunning(nameof(ScienceTeacher), nameof(ScienceTeacher.ReturnToStudyHall), nameof(ScienceTeacherReturnToStudyHallPatch), nameof(Postfix), playerWasInStudyHall, playerIsInCorrectSpot);
 
                 if (playerWasInStudyHall && playerIsInCorrectSpot)
                 {
@@ -44,7 +43,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(ScienceTeacherReturnToStudyHallPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(ScienceTeacherReturnToStudyHallPatch), nameof(Postfix), ex);
                 return;
             }
         }

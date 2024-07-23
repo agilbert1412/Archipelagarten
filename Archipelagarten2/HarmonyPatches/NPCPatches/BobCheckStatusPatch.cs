@@ -1,9 +1,8 @@
 ﻿using System;
-using Archipelagarten2.Archipelago;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.NPCPatches
@@ -12,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
     [HarmonyPatch(nameof(Bob.CheckStatus))]
     public static class BobCheckStatusPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -29,7 +28,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
             try
             {
                 var janitorGaveContract = EnvironmentController.Instance.ContainsFlag(Flag.JanitorGaveContractToBob);
-                DebugLogging.LogDebugPatchIsRunning(nameof(Bob), nameof(Bob.CheckStatus), nameof(BobCheckStatusPatch), nameof(Postfix), t, janitorGaveContract);
+                _logger.LogDebugPatchIsRunning(nameof(Bob), nameof(Bob.CheckStatus), nameof(BobCheckStatusPatch), nameof(Postfix), t, janitorGaveContract);
 
                 if (janitorGaveContract)
                 {
@@ -40,7 +39,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(BobCheckStatusPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(BobCheckStatusPatch), nameof(Postfix), ex);
                 return;
             }
         }

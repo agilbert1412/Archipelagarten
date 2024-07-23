@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.Constants;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.GenericPatches
@@ -16,11 +15,11 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
     [HarmonyPatch("Start")]
     public static class EndDayPanelPatch
     {
-        private static ManualLogSource _logger;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static KindergartenArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -32,7 +31,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(EndDayPanel), "Start", nameof(EndDayPanelPatch), nameof(Postfix));
+                _logger.LogDebugPatchIsRunning(nameof(EndDayPanel), "Start", nameof(EndDayPanelPatch), nameof(Postfix));
 
                 var finishedChecks = GetEndOfDayChecksToSend();
 
@@ -45,7 +44,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(EndDayPanelPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(EndDayPanelPatch), nameof(Postfix), ex);
                 return;
             }
         }

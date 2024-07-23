@@ -1,10 +1,9 @@
 ﻿using System;
-using Archipelagarten2.Archipelago;
 using Archipelagarten2.Constants;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.Death
@@ -13,13 +12,13 @@ namespace Archipelagarten2.Death
     [HarmonyPatch(nameof(DeathPanel.SetDeathMessage))]
     public static class DeathMessagePatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
         private static string _playerName;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -44,7 +43,7 @@ namespace Archipelagarten2.Death
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(DeathPanel), nameof(DeathPanel.SetDeathMessage), nameof(DeathMessagePatch), nameof(Prefix), x);
+                _logger.LogDebugPatchIsRunning(nameof(DeathPanel), nameof(DeathPanel.SetDeathMessage), nameof(DeathMessagePatch), nameof(Prefix), x);
 
                 if (x > DeathId.DEATHLINK_OFFSET)
                 {
@@ -84,7 +83,7 @@ namespace Archipelagarten2.Death
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(DeathMessagePatch), nameof(Prefix), ex);
+                _logger.LogErrorException(nameof(DeathMessagePatch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

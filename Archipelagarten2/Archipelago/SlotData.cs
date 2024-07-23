@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace Archipelagarten2.Archipelago
 {
-    public class SlotData
+    public class SlotData : ISlotData
     {
         private const string GOAL_KEY = "goal";
         private const string SHUFFLE_MONEY_KEY = "shuffle_money";
@@ -15,22 +15,22 @@ namespace Archipelagarten2.Archipelago
         private const string MULTIWORLD_VERSION_KEY = "multiworld_version";
 
         private Dictionary<string, object> _slotDataFields;
-        private ManualLogSource _console;
+        private ILogger _logger;
 
         public string SlotName { get; private set; }
         public Goal Goal { get; private set; }
         public int ShuffleMoney { get; private set; }
         public bool ShuffleMonstermon { get; private set; }
         public bool ShuffleOutfits { get; private set; }
-        public bool DeathLink { get; private set; }
+        public bool? DeathLink { get; private set; }
         public int Seed { get; private set; }
         public string MultiworldVersion { get; private set; }
 
-        public SlotData(string slotName, Dictionary<string, object> slotDataFields, ManualLogSource console)
+        public SlotData(string slotName, Dictionary<string, object> slotDataFields, ILogger logger)
         {
             SlotName = slotName;
             _slotDataFields = slotDataFields;
-            _console = console;
+            _logger = logger;
 
             Goal = GetSlotSetting(GOAL_KEY, Goal.CreatureFeature);
             ShuffleMoney = GetSlotSetting(SHUFFLE_MONEY_KEY, 1);
@@ -95,7 +95,7 @@ namespace Archipelagarten2.Archipelago
 
         private T GetSlotDefaultValue<T>(string key, T defaultValue)
         {
-            _console.LogWarning($"SlotData did not contain expected key: \"{key}\"");
+            _logger.LogWarning($"SlotData did not contain expected key: \"{key}\"");
             return defaultValue;
         }
     }

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.GenericPatches
@@ -14,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
     [HarmonyPatch("EnterSanctum")]
     public static class EnterSanctumPatch
     {
-        private static ManualLogSource _logger;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static KindergartenArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -30,7 +27,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(Nugget), "EnterSanctum", nameof(EnterSanctumPatch), nameof(Postfix));
+                _logger.LogDebugPatchIsRunning(nameof(Nugget), "EnterSanctum", nameof(EnterSanctumPatch), nameof(Postfix));
 
                 _locationChecker.AddCheckedLocation("Secret Ending");
                 if (_archipelago.SlotData.Goal == Goal.SecretEnding)
@@ -42,7 +39,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(EnterSanctumPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(EnterSanctumPatch), nameof(Postfix), ex);
                 return;
             }
         }

@@ -1,12 +1,10 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.HarmonyPatches.NPCPatches;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
 using KG2;
 using UnityEngine;
+using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
 
 namespace Archipelagarten2.HarmonyPatches.MoneyPatches
 {
@@ -14,11 +12,11 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
     [HarmonyPatch("TakeCubbyMoney")]
     public static class TakeTedCubbyMoneyPatch
     {
-        private static ManualLogSource _logger;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static KindergartenArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -35,7 +33,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
                     return true; // run original logic
                 }
 
-                DebugLogging.LogDebugPatchIsRunning(nameof(ObjectInteractable), "TakeCubbyMoney", nameof(TakeTedCubbyMoneyPatch), nameof(Prefix));
+                _logger.LogDebugPatchIsRunning(nameof(ObjectInteractable), "TakeCubbyMoney", nameof(TakeTedCubbyMoneyPatch), nameof(Prefix));
 
                 GameObject.Find("MoneyInCubby").GetComponent<SpriteRenderer>().enabled = false;
                 _locationChecker.AddCheckedLocation("Ted's Cubby");
@@ -44,7 +42,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(TakeTedCubbyMoneyPatch), nameof(Prefix), ex);
+                _logger.LogErrorException(nameof(TakeTedCubbyMoneyPatch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

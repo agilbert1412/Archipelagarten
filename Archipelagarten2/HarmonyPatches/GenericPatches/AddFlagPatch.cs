@@ -1,9 +1,8 @@
 ﻿using System;
-using Archipelagarten2.Archipelago;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.GenericPatches
@@ -12,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
     [HarmonyPatch(nameof(EnvironmentController.AddFlag))]
     public static class AddFlagPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -28,7 +27,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(EnvironmentController), nameof(EnvironmentController.AddFlag), nameof(AddFlagPatch), nameof(Postfix));
+                _logger.LogDebugPatchIsRunning(nameof(EnvironmentController), nameof(EnvironmentController.AddFlag), nameof(AddFlagPatch), nameof(Postfix));
 
                 if (flag is Flag.UsingStall1 or Flag.UsingStall2)
                 {
@@ -39,7 +38,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(AddFlagPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(AddFlagPatch), nameof(Postfix), ex);
                 return;
             }
         }

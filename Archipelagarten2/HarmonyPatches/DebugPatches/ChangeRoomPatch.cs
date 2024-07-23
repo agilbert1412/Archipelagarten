@@ -1,7 +1,6 @@
 ﻿using System;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.DebugPatches
@@ -10,9 +9,9 @@ namespace Archipelagarten2.HarmonyPatches.DebugPatches
     [HarmonyPatch(nameof(EnvironmentController.ChangeRoom))]
     public static class ChangeRoomPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource logger)
+        public static void Initialize(ILogger logger)
         {
             _logger = logger;
         }
@@ -22,12 +21,12 @@ namespace Archipelagarten2.HarmonyPatches.DebugPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(EnvironmentController), nameof(EnvironmentController.ChangeRoom), nameof(ChangeRoomPatch), nameof(Postfix), r);
+                _logger.LogDebugPatchIsRunning(nameof(EnvironmentController), nameof(EnvironmentController.ChangeRoom), nameof(ChangeRoomPatch), nameof(Postfix), r);
                 return;
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(ChangeRoomPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(ChangeRoomPatch), nameof(Postfix), ex);
                 return;
             }
         }

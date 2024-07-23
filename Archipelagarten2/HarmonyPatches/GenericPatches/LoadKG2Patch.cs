@@ -1,9 +1,7 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.Constants;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.GenericPatches
@@ -12,10 +10,10 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
     [HarmonyPatch(nameof(SaveLoadFile.LoadKG2))]
     public static class LoadKG2Patch
     {
-        private static ManualLogSource _logger;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static KindergartenArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, KindergartenArchipelagoClient archipelago)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -26,7 +24,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(SaveLoadFile), nameof(SaveLoadFile.LoadKG2), nameof(LoadKG2Patch), nameof(Prefix), x);
+                _logger.LogDebugPatchIsRunning(nameof(SaveLoadFile), nameof(SaveLoadFile.LoadKG2), nameof(LoadKG2Patch), nameof(Prefix), x);
 
                 x = _archipelago.SlotData.Seed;
 
@@ -34,7 +32,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(LoadKG2Patch), nameof(Prefix), ex);
+                _logger.LogErrorException(nameof(LoadKG2Patch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

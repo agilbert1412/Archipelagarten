@@ -1,15 +1,14 @@
 ﻿using Archipelagarten2.Archipelago;
 using Archipelagarten2.Constants;
 using KG2;
-using System;
 
 namespace Archipelagarten2.Items
 {
     public class GameStateWriter
     {
-        private ArchipelagoClient _archipelago;
+        private KindergartenArchipelagoClient _archipelago;
 
-        public GameStateWriter(ArchipelagoClient archipelago)
+        public GameStateWriter(KindergartenArchipelagoClient archipelago)
         {
             _archipelago = archipelago;
         }

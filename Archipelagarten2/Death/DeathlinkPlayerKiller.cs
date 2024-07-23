@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using Archipelagarten2.Characters;
 using Archipelagarten2.Constants;
-using Archipelagarten2.HarmonyPatches.GenericPatches;
-using Archipelagarten2.Utilities;
 using DG.Tweening;
 using KG2;
 using UnityEngine;
+using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
 using Object = UnityEngine.Object;
 
 namespace Archipelagarten2.Death
@@ -17,6 +16,7 @@ namespace Archipelagarten2.Death
     {
         private Dictionary<string, Action> _killMethods;
 
+        private ILogger _logger;
         private CharacterActions _characterActions;
         private bool _deathLink;
 
@@ -95,8 +95,9 @@ namespace Archipelagarten2.Death
             };
         }
 
-        public PlayerKiller(CharacterActions characterActions, bool deathLink)
+        public PlayerKiller(ILogger logger, CharacterActions characterActions, bool deathLink)
         {
+            _logger = logger;
             _characterActions = characterActions;
             _deathLink = deathLink;
             InitializeKillMethods();
@@ -117,7 +118,7 @@ namespace Archipelagarten2.Death
             }
             catch (Exception ex)
             {
-                DebugLogging.LogWarningException(ex, deathMessage);
+                _logger.LogWarningException(ex, deathMessage);
                 DoDefaultDeath();
             }
         }
@@ -162,8 +163,6 @@ namespace Archipelagarten2.Death
 
         private void JumpIntoHole()
         {
-            DebugLogging.LogDebug($"{nameof(PlayerKiller)}.{nameof(JumpIntoHole)}");
-
             var objectInteractable = Object.FindObjectOfType<ObjectInteractable>();
             objectInteractable.player.SetPlayerState(PlayerState.AnimState);
             objectInteractable.player.SetAnimatorBool("IsJumping", true);
@@ -186,7 +185,7 @@ namespace Archipelagarten2.Death
 
         private void CrushBomb()
         {
-            DebugLogging.LogDebug($"{nameof(PlayerKiller)}.{nameof(CrushBomb)}");
+            _logger.LogDebug($"{nameof(PlayerKiller)}.{nameof(CrushBomb)}");
 
             var objectInteractable = Object.FindObjectOfType<ObjectInteractable>();
             AudioController.instance.PlaySound("AcidDoorOpen");
@@ -672,7 +671,7 @@ namespace Archipelagarten2.Death
             return offset + killId;
         }
 
-        private static void CallPrivateMethod<T>(T obj, string methodName)
+        private void CallPrivateMethod<T>(T obj, string methodName)
         {
             try
             {
@@ -681,7 +680,7 @@ namespace Archipelagarten2.Death
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(ex, typeof(T).FullName, methodName);
+                _logger.LogErrorException(ex, typeof(T).FullName, methodName);
             }
         }
     }

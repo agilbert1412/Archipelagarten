@@ -1,9 +1,8 @@
 ﻿using System;
-using Archipelagarten2.Archipelago;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.NPCPatches
@@ -12,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
     [HarmonyPatch(nameof(NPCBehavior.Interact))]
     public static class TalkToAgnesPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -33,7 +32,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
                     return;
                 }
 
-                DebugLogging.LogDebugPatchIsRunning(nameof(NPCBehavior), nameof(NPCBehavior.Interact), nameof(TalkToAgnesPatch), nameof(Postfix));
+                _logger.LogDebugPatchIsRunning(nameof(NPCBehavior), nameof(NPCBehavior.Interact), nameof(TalkToAgnesPatch), nameof(Postfix));
                 
                 _locationChecker.AddCheckedLocation("Meet A Dumpster Hag");
 
@@ -41,7 +40,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(TalkToAgnesPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(TalkToAgnesPatch), nameof(Postfix), ex);
                 return;
             }
         }

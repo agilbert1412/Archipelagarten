@@ -1,10 +1,8 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.HarmonyPatches.NPCPatches;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.MoneyPatches
@@ -13,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
     [HarmonyPatch("SellInhaler")]
     public static class MontySellInhalerPatch
     {
-        private static ManualLogSource _logger;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static KindergartenArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -34,7 +32,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
                     return true; // run original logic
                 }
 
-                DebugLogging.LogDebugPatchIsRunning(nameof(Monty), "SellInhaler", nameof(MontySellInhalerPatch), nameof(Prefix));
+                _logger.LogDebugPatchIsRunning(nameof(Monty), "SellInhaler", nameof(MontySellInhalerPatch), nameof(Prefix));
 
                 EnvironmentController.Instance.UseItem(Item.Inhaler);
                 _locationChecker.AddCheckedLocation("Sell Inhaler To Monty");
@@ -43,7 +41,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(MontySellInhalerPatch), nameof(Prefix), ex);
+                _logger.LogErrorException(nameof(MontySellInhalerPatch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Archipelagarten2.Characters;
 using Archipelagarten2.Constants;
-using Archipelagarten2.Utilities;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 using Object = UnityEngine.Object;
 
@@ -9,10 +9,12 @@ namespace Archipelagarten2.Death
 {
     public class TrapManager
     {
+        private ILogger _logger;
         private CharacterActions _characterActions;
 
-        public TrapManager(CharacterActions characterActions)
+        public TrapManager(ILogger logger, CharacterActions characterActions)
         {
+            _logger = _logger;
             _characterActions = characterActions;
         }
 
@@ -42,7 +44,7 @@ namespace Archipelagarten2.Death
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(ex, nameof(TryHandleJanitorTrap));
+                _logger.LogErrorException(ex, nameof(TryHandleJanitorTrap));
             }
 
             return true;

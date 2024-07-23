@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.Characters;
 using Archipelagarten2.HarmonyPatches;
 using Archipelagarten2.Items;
-using Archipelagarten2.Locations;
 using Archipelagarten2.Serialization;
 using Archipelagarten2.Utilities;
 using BepInEx;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
 using Newtonsoft.Json;
 using UnityEngine;
+using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
 
 namespace Archipelagarten2
 {
@@ -22,12 +23,13 @@ namespace Archipelagarten2
     {
         public static Plugin Instance;
 
+        private ILogger _logger;
         private PatchInitializer _patcherInitializer;
         private Harmony _harmony;
-        private ArchipelagoClient _archipelago;
+        private KindergartenArchipelagoClient _archipelago;
         private ArchipelagoConnectionInfo APConnectionInfo { get; set; }
         private LocationChecker _locationChecker;
-        private ItemManager _itemManager;
+        private KindergartenItemManager _itemManager;
         private CharacterActions _characterActions;
 
         private void Awake()
@@ -35,18 +37,15 @@ namespace Archipelagarten2
             // Plugin startup logic
             Logger.LogInfo($"Loading {MyPluginInfo.PLUGIN_GUID}...");
 
-            Debugger.Break();
-
             try
             {
-                DebugLogging.Initialize(Logger);
-                TypeAccess.Initialize();
+                _logger = new LogHandler(Logger);
                 _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
                 _harmony.PatchAll();
             }
             catch (FileNotFoundException fnfe)
             {
-                Logger.LogError($"Cannot load {MyPluginInfo.PLUGIN_GUID}: A Necessary Dependency is missing [{fnfe.FileName}]");
+                _logger.LogError($"Cannot load {MyPluginInfo.PLUGIN_GUID}: A Necessary Dependency is missing [{fnfe.FileName}]");
                 throw;
             }
 
@@ -54,25 +53,25 @@ namespace Archipelagarten2
             ConnectToArchipelago();
             InitializeAfterConnection();
 
-            Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+            _logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
         }
 
         private void InitializeBeforeConnection()
         {
             _patcherInitializer = new PatchInitializer();
             _characterActions = new CharacterActions();
-            _archipelago = new ArchipelagoClient(Logger, _harmony, _characterActions, OnItemReceived);
+            _archipelago = new KindergartenArchipelagoClient(_logger, _characterActions, OnItemReceived);
         }
 
         private void InitializeAfterConnection()
         {
-            _locationChecker = new LocationChecker(Logger, _archipelago, new List<string>());
-            _itemManager = new ItemManager(Logger, _archipelago, _characterActions);
+            _locationChecker = new LocationChecker(_logger, _archipelago, new List<string>());
+            _itemManager = new KindergartenItemManager(_logger, _archipelago, _characterActions, new List<ReceivedItem>());
 
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();
             _itemManager.UpdateItemsAlreadyProcessed();
-            _patcherInitializer.InitializeAllPatches(Logger, _harmony, _archipelago, _locationChecker);
+            _patcherInitializer.InitializeAllPatches(_logger, _harmony, _archipelago, _locationChecker);
         }
 
         private void ConnectToArchipelago()

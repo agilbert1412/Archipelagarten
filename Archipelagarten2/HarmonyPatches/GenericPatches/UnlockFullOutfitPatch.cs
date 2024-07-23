@@ -1,10 +1,9 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.Constants;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.GenericPatches
@@ -13,11 +12,11 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
     [HarmonyPatch(nameof(EnvironmentController.UnlockFullOutfit))]
     public static class UnlockFullOutfitPatch
     {
-        private static ManualLogSource _logger;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static KindergartenArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -29,7 +28,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(EnvironmentController), nameof(EnvironmentController.UnlockFullOutfit), nameof(UnlockFullOutfitPatch), nameof(Prefix));
+                _logger.LogDebugPatchIsRunning(nameof(EnvironmentController), nameof(EnvironmentController.UnlockFullOutfit), nameof(UnlockFullOutfitPatch), nameof(Prefix));
 
                 if (!_archipelago.SlotData.ShuffleOutfits)
                 {
@@ -47,7 +46,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(UnlockFullOutfitPatch), nameof(Prefix), ex);
+                _logger.LogErrorException(nameof(UnlockFullOutfitPatch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

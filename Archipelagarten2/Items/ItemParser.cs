@@ -3,19 +3,23 @@ using Archipelagarten2.Archipelago;
 using Archipelagarten2.Characters;
 using Archipelagarten2.Constants;
 using Archipelagarten2.Death;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.Items
 {
     public class ItemParser
     {
-        private ArchipelagoClient _archipelago;
+        private ILogger _logger;
+        private SlotData _slotData;
         private TrapManager _trapManager;
 
-        public ItemParser(ArchipelagoClient archipelago, CharacterActions characterActions)
+        public ItemParser(ILogger logger, SlotData slotData, CharacterActions characterActions)
         {
-            _archipelago = archipelago;
-            _trapManager = new TrapManager(characterActions);
+            _logger = logger;
+            _slotData = slotData;
+            _trapManager = new TrapManager(_logger, characterActions);
         }
 
         public void ProcessItem(ReceivedItem item)
@@ -53,7 +57,7 @@ namespace Archipelagarten2.Items
                 return false;
             }
 
-            var moneyAmount = Math.Max(1, _archipelago.SlotData.ShuffleMoney);
+            var moneyAmount = Math.Max(1, _slotData.ShuffleMoney);
             AddMoney(moneyAmount);
 
             return true;
@@ -66,7 +70,7 @@ namespace Archipelagarten2.Items
                 return false;
             }
 
-            var moneyAmount = Math.Max(1, _archipelago.SlotData.ShuffleMoney) * APItem.POCKET_CHANGE_MULTIPLIER;
+            var moneyAmount = Math.Max(1, _slotData.ShuffleMoney) * APItem.POCKET_CHANGE_MULTIPLIER;
             AddMoney(moneyAmount);
 
             return true;

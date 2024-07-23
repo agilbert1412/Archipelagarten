@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using KG2;
+﻿using KG2;
 
 namespace Archipelagarten2.Characters
 {

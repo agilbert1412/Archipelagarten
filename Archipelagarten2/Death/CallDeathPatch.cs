@@ -1,9 +1,8 @@
 ﻿using System;
-using Archipelagarten2.Archipelago;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.Death
@@ -12,11 +11,11 @@ namespace Archipelagarten2.Death
     [HarmonyPatch(nameof(UIController.CallDeath), typeof(int))]
     public static class CallDeathPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -33,7 +32,7 @@ namespace Archipelagarten2.Death
                     return;
                 }
 
-                DebugLogging.LogDebugPatchIsRunning(nameof(UIController), nameof(UIController.CallDeath), nameof(CallDeathPatch), nameof(Postfix), x);
+                _logger.LogDebugPatchIsRunning(nameof(UIController), nameof(UIController.CallDeath), nameof(CallDeathPatch), nameof(Postfix), x);
 
                 var deathMessages = DeathPanel.DeathMessages.LoadDeathMessage(__instance.deathPanel.deathXML);
                 foreach (var message in deathMessages.Messages)
@@ -50,7 +49,7 @@ namespace Archipelagarten2.Death
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(CallDeathPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(CallDeathPatch), nameof(Postfix), ex);
                 return;
             }
         }

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Archipelagarten2.Archipelago;
 using Archipelagarten2.Constants;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.GenericPatches
@@ -15,11 +12,11 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
     [HarmonyPatch("CheckItemUnlock")]
     public static class CheckItemUnlockPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -31,7 +28,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(MissionButton), "CheckItemUnlock", nameof(CheckItemUnlockPatch), nameof(Prefix));
+                _logger.LogDebugPatchIsRunning(nameof(MissionButton), "CheckItemUnlock", nameof(CheckItemUnlockPatch), nameof(Prefix));
 
                 _logger.LogInfo($"__instance.itemToUnlock: {__instance.itemToUnlock}");
 
@@ -57,7 +54,7 @@ namespace Archipelagarten2.HarmonyPatches.GenericPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(CheckItemUnlockPatch), nameof(Prefix), ex);
+                _logger.LogErrorException(nameof(CheckItemUnlockPatch), nameof(Prefix), ex);
                 return true;
             }
         }

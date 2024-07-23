@@ -1,10 +1,8 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.HarmonyPatches.NPCPatches;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.MoneyPatches
@@ -13,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
     [HarmonyPatch("SellWeedMonstermon")]
     public static class MontySellWeedMonstermonPatch
     {
-        private static ManualLogSource _logger;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static KindergartenArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -34,7 +32,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
                     return true; // run original logic
                 }
 
-                DebugLogging.LogDebugPatchIsRunning(nameof(Monty), "SellWeedMonstermon", nameof(MontySellWeedMonstermonPatch), nameof(Prefix));
+                _logger.LogDebugPatchIsRunning(nameof(Monty), "SellWeedMonstermon", nameof(MontySellWeedMonstermonPatch), nameof(Prefix));
 
                 EnvironmentController.Instance.UseItem(Item.BagOfWeed);
                 EnvironmentController.Instance.UnlockMonstermon(25);
@@ -44,7 +42,7 @@ namespace Archipelagarten2.HarmonyPatches.MoneyPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(MontySellWeedMonstermonPatch), nameof(Prefix), ex);
+                _logger.LogErrorException(nameof(MontySellWeedMonstermonPatch), nameof(Prefix), ex);
                 return true; // run original logic
             }
         }

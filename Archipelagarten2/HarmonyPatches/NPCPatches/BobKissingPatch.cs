@@ -1,9 +1,8 @@
 ﻿using System;
-using Archipelagarten2.Archipelago;
-using Archipelagarten2.Locations;
-using Archipelagarten2.Utilities;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.NPCPatches
@@ -12,11 +11,11 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
     [HarmonyPatch(nameof(Bob.KickOutKissing))]
     public static class BobKissingPatch
     {
-        private static ManualLogSource _logger;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _logger = logger;
             _archipelago = archipelago;
@@ -28,7 +27,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
         {
             try
             {
-                DebugLogging.LogDebugPatchIsRunning(nameof(Bob), nameof(Bob.KickOutKissing), nameof(BobKissingPatch), nameof(Postfix));
+                _logger.LogDebugPatchIsRunning(nameof(Bob), nameof(Bob.KickOutKissing), nameof(BobKissingPatch), nameof(Postfix));
                 
                 _locationChecker.AddCheckedLocation("K-I-S-S-I-N-G");
 
@@ -36,7 +35,7 @@ namespace Archipelagarten2.HarmonyPatches.NPCPatches
             }
             catch (Exception ex)
             {
-                DebugLogging.LogErrorException(nameof(BobKissingPatch), nameof(Postfix), ex);
+                _logger.LogErrorException(nameof(BobKissingPatch), nameof(Postfix), ex);
                 return;
             }
         }

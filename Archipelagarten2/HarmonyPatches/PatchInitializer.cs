@@ -1,16 +1,14 @@
-﻿using Archipelagarten2.Locations;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Archipelagarten2.Archipelago;
+﻿using Archipelagarten2.Archipelago;
 using Archipelagarten2.Death;
 using Archipelagarten2.Items;
-using BepInEx.Logging;
 using HarmonyLib;
 using Archipelagarten2.HarmonyPatches.GenericPatches;
 using Archipelagarten2.HarmonyPatches.NPCPatches;
 using Archipelagarten2.HarmonyPatches.DebugPatches;
 using Archipelagarten2.HarmonyPatches.MoneyPatches;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace Archipelagarten2.HarmonyPatches
 {
@@ -20,7 +18,7 @@ namespace Archipelagarten2.HarmonyPatches
         {
         }
 
-        public void InitializeAllPatches(ManualLogSource logger, Harmony harmony, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public void InitializeAllPatches(ILogger logger, Harmony harmony, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             InitializeDebugPatches(logger);
             InitializeGenericPatches(logger, archipelago, locationChecker);
@@ -29,13 +27,13 @@ namespace Archipelagarten2.HarmonyPatches
             InitializeDeathPatches(logger, archipelago, locationChecker);
         }
 
-        private static void InitializeDebugPatches(ManualLogSource logger)
+        private static void InitializeDebugPatches(ILogger logger)
         {
             ChangeRoomPatch.Initialize(logger);
             GoToNextAreaPatch.Initialize(logger);
         }
 
-        private static void InitializeGenericPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeGenericPatches(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             var gameStateWriter = new GameStateWriter(archipelago);
             CreateSavePatch.Initialize(logger, archipelago, gameStateWriter);
@@ -47,7 +45,7 @@ namespace Archipelagarten2.HarmonyPatches
             AddFlagPatch.Initialize(logger, archipelago, locationChecker);
         }
 
-        private static void InitializeNPCPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeNPCPatches(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             BobCheckStatusPatch.Initialize(logger, archipelago, locationChecker);
             BobKissingPatch.Initialize(logger, archipelago, locationChecker);
@@ -60,7 +58,7 @@ namespace Archipelagarten2.HarmonyPatches
             CheckItemUnlockPatch.Initialize(logger, archipelago, locationChecker);
         }
 
-        private static void InitializeMoneyPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeMoneyPatches(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             FelixGetFivePatch.Initialize(logger, archipelago, locationChecker);
             FelixGetNickelPatch.Initialize(logger, archipelago, locationChecker);
@@ -71,7 +69,7 @@ namespace Archipelagarten2.HarmonyPatches
             TakeTedCubbyMoneyPatch.Initialize(logger, archipelago, locationChecker);
         }
 
-        private static void InitializeDeathPatches(ManualLogSource logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeDeathPatches(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             CallDeathPatch.Initialize(logger, archipelago, locationChecker);
             DeathMessagePatch.Initialize(logger, archipelago, locationChecker);

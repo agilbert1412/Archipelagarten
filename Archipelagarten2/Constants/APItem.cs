@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Archipelagarten2.Constants
+﻿namespace Archipelagarten2.Constants
 {
     public class APItem
     {
