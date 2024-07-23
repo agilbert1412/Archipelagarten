@@ -559,6 +559,7 @@ namespace Archipelagarten2.Archipelago
                 return;
             }
 
+            _logger.LogMessage($"Sending a deathlink with reason [{reason}]");
             _deathLinkService.SendDeathLink(new DeathLink(GetPlayerName(), reason));
         }
 

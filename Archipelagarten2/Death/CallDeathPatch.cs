@@ -38,7 +38,7 @@ namespace Archipelagarten2.Death
                 var deathMessages = DeathPanel.DeathMessages.LoadDeathMessage(__instance.deathPanel.deathXML);
                 foreach (var message in deathMessages.Messages)
                 {
-                    _logger.LogDebug($"{message.DeathIndex}: {message.Message}");
+                    // _logger.LogDebug($"{message.DeathIndex}: {message.Message}");
                     if (message.DeathIndex == x)
                     {
                         _archipelago.SendDeathLink(message.Message);
