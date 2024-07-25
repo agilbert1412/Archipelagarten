@@ -36,7 +36,7 @@ namespace Archipelagarten2.Archipelago
             ShuffleMoney = GetSlotSetting(SHUFFLE_MONEY_KEY, 1);
             ShuffleMonstermon = GetSlotSetting(SHUFFLE_MONSTERMON_KEY, true);
             ShuffleOutfits = GetSlotSetting(SHUFFLE_OUTFITS_KEY, false);
-            DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
+            DeathLink = true;
             Seed = GetSlotSetting(SEED_KEY, 0);
             MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
         }

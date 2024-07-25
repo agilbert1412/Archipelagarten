@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.Characters;
+using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
@@ -12,7 +12,7 @@ namespace Archipelagarten2.Items
         private KindergartenArchipelagoClient _archipelago;
         private ItemParser _itemParser;
 
-        public KindergartenItemManager(ILogger logger, KindergartenArchipelagoClient archipelago, CharacterActions characterActions, IEnumerable<ReceivedItem> itemsAlreadyProcessed) : base(archipelago, itemsAlreadyProcessed)
+        public KindergartenItemManager(ILogger logger, KindergartenArchipelagoClient archipelago, UnityActions characterActions, IEnumerable<ReceivedItem> itemsAlreadyProcessed) : base(archipelago, itemsAlreadyProcessed)
         {
             _archipelago = archipelago;
             _itemParser = new ItemParser(logger, archipelago.SlotData, characterActions);

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.Characters;
 using Archipelagarten2.HarmonyPatches;
 using Archipelagarten2.Items;
 using Archipelagarten2.Serialization;
+using Archipelagarten2.UnityObjects;
 using Archipelagarten2.Utilities;
 using BepInEx;
 using HarmonyLib;
@@ -30,7 +30,8 @@ namespace Archipelagarten2
         private ArchipelagoConnectionInfo APConnectionInfo { get; set; }
         private LocationChecker _locationChecker;
         private KindergartenItemManager _itemManager;
-        private CharacterActions _characterActions;
+        private GameObjectFactory _gameObjectFactory;
+        private UnityActions _characterActions;
 
         private void Awake()
         {
@@ -59,7 +60,8 @@ namespace Archipelagarten2
         private void InitializeBeforeConnection()
         {
             _patcherInitializer = new PatchInitializer();
-            _characterActions = new CharacterActions();
+            _gameObjectFactory = new GameObjectFactory(_logger);
+            _characterActions = new UnityActions(_logger, _gameObjectFactory);
             _archipelago = new KindergartenArchipelagoClient(_logger, _characterActions, OnItemReceived);
         }
 
@@ -71,7 +73,7 @@ namespace Archipelagarten2
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();
             _itemManager.UpdateItemsAlreadyProcessed();
-            _patcherInitializer.InitializeAllPatches(_logger, _harmony, _archipelago, _locationChecker);
+            _patcherInitializer.InitializeAllPatches(_logger, _harmony, _archipelago, _locationChecker, _gameObjectFactory);
         }
 
         private void ConnectToArchipelago()

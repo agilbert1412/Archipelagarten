@@ -1,8 +1,8 @@
 ﻿using System;
 using Archipelagarten2.Archipelago;
-using Archipelagarten2.Characters;
 using Archipelagarten2.Constants;
 using Archipelagarten2.Death;
+using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
@@ -15,7 +15,7 @@ namespace Archipelagarten2.Items
         private SlotData _slotData;
         private TrapManager _trapManager;
 
-        public ItemParser(ILogger logger, SlotData slotData, CharacterActions characterActions)
+        public ItemParser(ILogger logger, SlotData slotData, UnityActions characterActions)
         {
             _logger = logger;
             _slotData = slotData;

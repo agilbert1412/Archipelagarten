@@ -1,6 +1,6 @@
 ﻿using System;
-using Archipelagarten2.Characters;
 using Archipelagarten2.Constants;
+using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
 using Object = UnityEngine.Object;
@@ -10,12 +10,12 @@ namespace Archipelagarten2.Death
     public class TrapManager
     {
         private ILogger _logger;
-        private CharacterActions _characterActions;
+        private UnityActions _unityActions;
 
-        public TrapManager(ILogger logger, CharacterActions characterActions)
+        public TrapManager(ILogger logger, UnityActions unityActions)
         {
             _logger = _logger;
-            _characterActions = characterActions;
+            _unityActions = unityActions;
         }
 
         public bool TryHandleTrap(string itemName)
@@ -37,14 +37,18 @@ namespace Archipelagarten2.Death
 
             try
             {
-                var janitor = Object.FindObjectOfType<Janitor>();
-                _characterActions.MoveNPCToCurrentRoom(janitor);
+                var janitor = _unityActions.FindOrCreateNpc<Janitor>();
+                if (!_unityActions.MoveNPCToRangedDistance(janitor))
+                {
+                    _logger.LogError($"Failed in {nameof(TryHandleJanitorTrap)}, could not bring a Janitor to the player");
+                }
+
                 // npc.StartWaitToInteract(1f, EnvironmentController.Instance.ContainsFlag(Flag.JanitorGoGetChainsaw) ? 447 : 444);
                 janitor.KillPlayer(DeathId.JANITOR_TRAP);
             }
             catch (Exception ex)
             {
-                _logger.LogErrorException(ex, nameof(TryHandleJanitorTrap));
+                _logger.LogErrorException($"Failed in {nameof(TryHandleJanitorTrap)}", ex);
             }
 
             return true;

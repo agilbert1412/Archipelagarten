@@ -1,0 +1,283 @@
+<DeathMessages>
+  <TitleText>You died.</TitleText>
+  <LilyText>Lily died.</LilyText>
+  <BillyText>Billy died.</BillyText>
+  <RestartCurrentText>Restart Current Area</RestartCurrentText>
+  <RestartOtherText>Restart From Another Area</RestartOtherText>
+  <RestartFromBedroomText>Restart From Bedroom</RestartFromBedroomText>
+  <QuitText>Quit to Menu</QuitText>
+  <Messages>
+    <DeathMessage>
+      <DeathIndex>0</DeathIndex>
+      <Message>New school, same janitor.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>1</DeathIndex>
+      <Message>Don't shake the tree if the bees are gonna kill you.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>3</DeathIndex>
+      <Message>Danner wants flowers or a cadaver. He's not picky.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>4</DeathIndex>
+      <Message>Dr. Danner is serious when he says to get out of his classroom.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>5</DeathIndex>
+      <Message>Puddles are slippery.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>6</DeathIndex>
+      <Message>Monty is pretty bitter about being left upstairs. Don't get too close to him and he'll leave you alone.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>7</DeathIndex>
+      <Message>You should use your time a bit better.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>8</DeathIndex>
+      <Message>Ozzy can get back up with a vengeance after using his inhaler.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>9</DeathIndex>
+      <Message>Angry bees are bad for your health.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>10</DeathIndex>
+      <Message>The plant creature wants the flowers in a different order.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>11</DeathIndex>
+      <Message>It may be a fresh Nugget Cave, but it's just as deep as the last one.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>12</DeathIndex>
+      <Message>You should bring something to hit the ball back with.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>13</DeathIndex>
+      <Message>Get out of Buggs's line of sight if you want to keep your head.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>14</DeathIndex>
+      <Message>Don't get in Nugget's way.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>15</DeathIndex>
+      <Message>No moving or talking in study hall. Now would be a good time to eat an apple.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>16</DeathIndex>
+      <Message>Dr. Danner is in the bathroom. You shouldn't go there.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>17</DeathIndex>
+      <Message>You should get back outside before the bell rings.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>18</DeathIndex>
+      <Message>Get back in the classroom before the lights come back on.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>19</DeathIndex>
+      <Message>Find a way to distract Penny before she realizes the locker is being broken into.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>20</DeathIndex>
+      <Message>Don't let anyone kick Monty off of the chemistry set.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>21</DeathIndex>
+      <Message>That was the wrong thing to mix with.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>22</DeathIndex>
+      <Message>The creature will kill you if he isn't distracted by something.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>23</DeathIndex>
+      <Message>Don't get too close to the creature.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>24</DeathIndex>
+      <Message>Jerome might be a little mad that you helped kill his father.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>25</DeathIndex>
+      <Message>Don't wait until Penny is approaching to leave the car on the stairs.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>26</DeathIndex>
+      <Message>You should press a button that sends Penny away from you.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>27</DeathIndex>
+      <Message>Don't go inside unless the lunch lady has been removed.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>28</DeathIndex>
+      <Message>You'll have to save Lily immediately after killing the first monster.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>29</DeathIndex>
+      <Message>Save Billy after saving Lily.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>30</DeathIndex>
+      <Message>Eliminate the principal before the cannon fires.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>31</DeathIndex>
+      <Message>Don't let the monster suck you up. Use the robotic claws to stop her.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>32</DeathIndex>
+      <Message>Use the claws to force the monster to look up at Nugget when he comes down.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>33</DeathIndex>
+      <Message>Don't stick forks in the electrical outlet. This applies to real life too.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>34</DeathIndex>
+      <Message>That was the wrong order.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>35</DeathIndex>
+      <Message>Penny will shoot everyone in the head if she isn't distracted. Maybe something from earlier will help?</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>36</DeathIndex>
+      <Message>Don't wait around if you decide to help the janitor.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>37</DeathIndex>
+      <Message>He really wants that key before lunch starts.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>38</DeathIndex>
+      <Message>You're an accomplice. Go upstairs and help the geezer out.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>39</DeathIndex>
+      <Message>You should get back to your spot in study hall before Dr. Danner finds you.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>40</DeathIndex>
+      <Message>Students aren't allowed in the teacher's lounge.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>41</DeathIndex>
+      <Message>Those bodies need to be taken care of or else one of you is going to prison.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>42</DeathIndex>
+      <Message>You should help the janitor finish up with those bodies.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>43</DeathIndex>
+      <Message>If Penny finds the contraband by the tree, you're on the hook for it.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>44</DeathIndex>
+      <Message>Use the toilet paper to distract the janitor before dealing with Cindy.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>45</DeathIndex>
+      <Message>Getting caught out of study hall is a great way to get sent to the principal's office.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>46</DeathIndex>
+      <Message>Get the knife before you get close to Applegate.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>47</DeathIndex>
+      <Message>You should do what Billy says as long as you're holding a listening device.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>48</DeathIndex>
+      <Message>Don't get caught with the remote. Get it to Lily and Billy before Penny completes her scan.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>49</DeathIndex>
+      <Message>It's not safe to stay in the janitor's closet too long.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>50</DeathIndex>
+      <Message>The principal is waiting for you downstairs. It's best to sneak out the way you came in.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>51</DeathIndex>
+      <Message>Nugget's in a better situation than you right now.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>52</DeathIndex>
+      <Message>You should have delivered the declaration.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>53</DeathIndex>
+      <Message>Find a way to escape the bathroom. Your screwdriver could help.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>54</DeathIndex>
+      <Message>Don't get sent to the principal's office.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>55</DeathIndex>
+      <Message>If Billy draws the lunch lady's attention, you're all in trouble.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>56</DeathIndex>
+      <Message>Penny will find you if you have contraband on you when the bell rings.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>57</DeathIndex>
+      <Message>It's probably best if you just don't go upstairs.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>58</DeathIndex>
+      <Message>Don't stick around outside. Get inside before the bell rings.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>59</DeathIndex>
+      <Message>Don't get caught in study hall if you don't have study hall.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>60</DeathIndex>
+      <Message>Sneak in through the principal's office to avoid getting caught.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>61</DeathIndex>
+      <Message>Get out of the bathroom before the janitor notices you've clogged the toilet.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>62</DeathIndex>
+      <Message>Make sure Monty gets his elevator key back.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>63</DeathIndex>
+      <Message>Kill the creature that's looking at you before doing anything else.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>64</DeathIndex>
+      <Message>Make sure all of the creatures are dead before going for the principal.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>65</DeathIndex>
+      <Message>It's probably best if you don't show up at all, if you don't have the hair samples.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>66</DeathIndex>
+      <Message>Don't go back out there.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>67</DeathIndex>
+      <Message>It's not a good idea to crush an active explosive device.</Message>
+    </DeathMessage>
+    <DeathMessage>
+      <DeathIndex>68</DeathIndex>
+      <Message>Wrong button.</Message>
+    </DeathMessage>
+  </Messages>
+</DeathMessages>

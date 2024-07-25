@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Archipelagarten2.Characters;
 using Archipelagarten2.Death;
+using Archipelagarten2.UnityObjects;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
@@ -12,7 +12,7 @@ namespace Archipelagarten2.Archipelago
 {
     public class KindergartenArchipelagoClient : ArchipelagoClient
     {
-        private readonly CharacterActions _characterActions;
+        private readonly UnityActions _characterActions;
 
         public override string GameName => "Kindergarten 2";
         public override string ModName => "Archipelagarten2";
@@ -20,7 +20,7 @@ namespace Archipelagarten2.Archipelago
 
         public SlotData SlotData => (SlotData)_slotData;
 
-        public KindergartenArchipelagoClient(ILogger logger, CharacterActions characterActions, Action itemReceivedFunction) : 
+        public KindergartenArchipelagoClient(ILogger logger, UnityActions characterActions, Action itemReceivedFunction) : 
             base(logger, new DataPackageCache("kindergarten_2", "BepInEx", "plugins", "Archipelagarten", "IdTables"), itemReceivedFunction)
         {
             _characterActions = characterActions;

@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Archipelagarten2.Characters;
 using Archipelagarten2.Constants;
+using Archipelagarten2.UnityObjects;
 using DG.Tweening;
 using KG2;
 using UnityEngine;
@@ -14,10 +14,11 @@ namespace Archipelagarten2.Death
 {
     internal class PlayerKiller
     {
-        private Dictionary<string, Action> _killMethods;
+        private Dictionary<string, Func<bool>> _killMethods;
+        private Dictionary<string, int> _deathIds;
 
         private ILogger _logger;
-        private CharacterActions _characterActions;
+        private UnityActions _unityActions;
         private bool _deathLink;
 
         private void InitializeKillMethods()
@@ -91,14 +92,37 @@ namespace Archipelagarten2.Death
                 { "It's probably best if you don't show up at all, if you don't have the hair samples.", () => MontyKillCannon(65) },
                 { "Don't go back out there.", () => PlayerShotByPenny(66) },
                 { "It's not a good idea to crush an active explosive device.", CrushBomb },
-                { "Wrong button.", DoDefaultDeath },
+                { "Wrong button.", () => DoDefaultDeath("Wrong button.") },
             };
         }
 
-        public PlayerKiller(ILogger logger, CharacterActions characterActions, bool deathLink)
+        private void InitializeDeathIds()
+        {
+            try
+            {
+                var deathPanel = _unityActions.FindOrCreatePanel<DeathPanel>();
+                var deathMessages = DeathPanel.DeathMessages.LoadDeathMessage(deathPanel.deathXML);
+                _deathIds = new Dictionary<string, int>();
+                foreach (var message in deathMessages.Messages)
+                {
+                    if (_deathIds.ContainsKey(message.Message))
+                    {
+                        continue;
+                    }
+
+                    _deathIds.Add(message.Message, message.DeathIndex);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarningException($"Could not initialize death ids", ex);
+            }
+        }
+
+        public PlayerKiller(ILogger logger, UnityActions unityActions, bool deathLink)
         {
             _logger = logger;
-            _characterActions = characterActions;
+            _unityActions = unityActions;
             _deathLink = deathLink;
             InitializeKillMethods();
         }
@@ -109,7 +133,10 @@ namespace Archipelagarten2.Death
             {
                 if (_killMethods.ContainsKey(deathMessage))
                 {
-                    _killMethods[deathMessage]();
+                    if (!_killMethods[deathMessage]())
+                    {
+                        DoDefaultDeath(deathMessage);
+                    }
                 }
                 else
                 {
@@ -119,93 +146,137 @@ namespace Archipelagarten2.Death
             catch (Exception ex)
             {
                 _logger.LogWarningException(ex, deathMessage);
-                DoDefaultDeath();
+                DoDefaultDeath(deathMessage);
             }
         }
 
-        private void DoDefaultDeath()
+        private bool DoDefaultDeath(string deathMessage)
         {
-            CallDeathUi(68);
+            if (_deathIds == null)
+            {
+                InitializeDeathIds();
+            }
+
+            if (_deathIds == null)
+            {
+                CallDeathUi(68);
+                return false;
+            }
+
+            CallDeathUi(_deathIds[deathMessage]);
+            return true;
         }
 
-        private void JanitorKillPlayer(int killId)
+        private bool JanitorKillPlayer(int killId)
         {
-            var janitor = Object.FindObjectOfType<Janitor>();
+            var janitor = _unityActions.FindOrCreateNpc<Janitor>();
 
-            _characterActions.MoveNPCToCurrentRoom(janitor);
-            JanitorKillPlayer(janitor, killId);
+            if (!_unityActions.MoveNPCToRangedDistance(janitor))
+            {
+                return false;
+            }
+
+            return JanitorKillPlayer(janitor, killId);
         }
 
-        private void CindyTellJanitorToKillPlayer()
+        private bool CindyTellJanitorToKillPlayer()
         {
-            var cindy = Object.FindObjectOfType<Cindy>();
-            _characterActions.MoveNPCToCurrentRoom(cindy);
+            var cindy = _unityActions.FindOrCreateNpc<Cindy>();
+            if (!_unityActions.MoveNPCToRangedDistance(cindy))
+            {
+                return false;
+            }
 
-            var janitor = Object.FindObjectOfType<Janitor>();
+            var janitor = _unityActions.FindOrCreateNpc<Janitor>();
 
             CallPrivateMethod(cindy, "CallCops");
             CallPrivateMethod(cindy, "JanitorComeToClass");
 
-            JanitorKillPlayer(janitor, 44);
+            return JanitorKillPlayer(janitor, 44);
         }
 
-        private void SlipAndFall()
+        private bool SlipAndFall()
         {
-            var janitor = Object.FindObjectOfType<Janitor>();
-            _characterActions.MoveNPCToCurrentRoom(janitor);
-            CallDeathUi(janitor, 5);
+            var janitor = _unityActions.FindOrCreateNpc<Janitor>();
+            if (!_unityActions.MoveNPCToRangedDistance(janitor))
+            {
+                return false;
+            }
+
+            return CallDeathUi(janitor, 5);
         }
 
-        private void JanitorKillPlayer(Janitor janitor, int killId)
+        private bool JanitorKillPlayer(Janitor janitor, int killId)
         {
             janitor.KillPlayer(GetOffsetKillId(killId));
+            return true;
         }
 
-        private void JumpIntoHole()
+        private bool JumpIntoHole()
         {
-            var objectInteractable = Object.FindObjectOfType<ObjectInteractable>();
-            objectInteractable.player.SetPlayerState(PlayerState.AnimState);
-            objectInteractable.player.SetAnimatorBool("IsJumping", true);
-            objectInteractable.player.WalkToPoint(new Vector3(-0.943f, -0.68f), 0.25f, () =>
-            {
-                objectInteractable.player.SetSpriteMasking(true);
-                GameObject.Find("NuggetHoleMask").GetComponent<SpriteMask>().enabled = true;
-                // objectInteractable.player.transform.DOLocalMoveY(-1.53f, 1.75f);
+            var interactable = _unityActions.FindOrCreateInteractable();
+            interactable.player.SetPlayerState(PlayerState.AnimState);
+            interactable.player.SetAnimatorBool("IsJumping", true);
 
-                IEnumerator JumpedIntoHole()
-                {
-                    yield return new WaitForSeconds(4f);
-                    Object.FindObjectOfType<CameraController>().CameraShake(0.25f);
-                    CallDeathUi(objectInteractable, 11);
-                }
+            interactable.player.WalkToPoint(new Vector3(-0.943f, -0.68f), 0.25f, () => JumpInHole(interactable));
 
-                objectInteractable.StartCoroutine(JumpedIntoHole());
-            });
+            return true;
         }
 
-        private void CrushBomb()
+        private void JumpInHole(ObjectInteractable interactable)
+        {
+            interactable.player.SetSpriteMasking(true);
+            var nuggetHoleMask = _unityActions.FindOrCreateByName("NuggetHoleMask");
+            nuggetHoleMask.GetComponent<SpriteMask>().enabled = true;
+            // interactable.player.transform.DOLocalMoveY(-1.53f, 1.75f);
+
+            interactable.StartCoroutine(JumpedIntoHole(interactable));
+        }
+
+        private IEnumerator JumpedIntoHole(ObjectInteractable interactable)
+        {
+            yield return new WaitForSeconds(4f);
+            Object.FindObjectOfType<CameraController>().CameraShake(0.25f);
+            CallDeathUi(interactable, 11);
+        }
+
+        private bool CrushBomb()
         {
             _logger.LogDebug($"{nameof(PlayerKiller)}.{nameof(CrushBomb)}");
 
-            var objectInteractable = Object.FindObjectOfType<ObjectInteractable>();
+            var interactable = _unityActions.FindOrCreateInteractable();
             AudioController.instance.PlaySound("AcidDoorOpen");
-            GameObject.Find("JeromeBombCrusher").GetComponent<SpriteRenderer>().enabled = false;
-            objectInteractable.player.Explode();
-            objectInteractable.player.SetPlayerState(PlayerState.AnimState);
+            var jeromeBombCrusher = _unityActions.FindOrCreateByName("JeromeBombCrusher");
+            jeromeBombCrusher.GetComponent<SpriteRenderer>().enabled = false;
+            interactable.player.Explode();
+            interactable.player.SetPlayerState(PlayerState.AnimState);
             Object.FindObjectOfType<CameraController>().CameraShake(0.25f);
-            CallDeathUi(objectInteractable, 67, 3f);
-            objectInteractable.UI.CallDeath(DeathId.DEATHLINK_OFFSET + 67, 3f);
-            GameObject.Find("HydraulicPress").transform.localPosition = new Vector3(-1.885f, -20.64f, 0.0f);
-            GameObject.Find("HydraulicBaseDestroyed").transform.localPosition = new Vector3(-1.885f, -0.64f, 0.0f);
-            GameObject.Find("HydraulicBurst").GetComponent<ParticleSystem>().Play();
+            CallDeathUi(interactable, 67, 3f);
+            interactable.UI.CallDeath(DeathId.DEATHLINK_OFFSET + 67, 3f);
+            var hydraulicPress = _unityActions.FindOrCreateByName("HydraulicPress");
+            hydraulicPress.transform.localPosition = new Vector3(-1.885f, -20.64f, 0.0f);
+            var hydraulicBaseDestroyed = _unityActions.FindOrCreateByName("HydraulicBaseDestroyed");
+            hydraulicBaseDestroyed.transform.localPosition = new Vector3(-1.885f, -0.64f, 0.0f);
+            var hydraulicBurst = _unityActions.FindOrCreateByName("HydraulicBurst");
+            hydraulicBurst.GetComponent<ParticleSystem>().Play();
+
+            return true;
         }
 
-        private void BillyGetSuckedIn()
+        private bool BillyGetSuckedIn()
         {
-            var billy = Object.FindObjectOfType<Billy>();
+            var billy = _unityActions.FindOrCreateNpc<Billy>();
             var lily = billy.GetNPC("Lily");
-            _characterActions.MoveNPCToCurrentRoom(billy);
-            _characterActions.MoveNPCToCurrentRoom(lily);
+            if (!_unityActions.MoveNPCToRangedDistance(billy))
+            {
+                return false;
+            }
+
+            if (!_unityActions.MoveNPCToRangedDistance(lily))
+            {
+                return false;
+            }
+
             billy.ClearCameraTarget();
             billy.overrideMovementCode = true;
             billy.EnableSpriteMasks();
@@ -229,19 +300,28 @@ namespace Archipelagarten2.Death
             billy.player.transform.DOLocalMove(new Vector3(-4f, -0.54f), 3f).SetEase(Ease.Linear);
             billy.player.transform.DOLocalRotate(new Vector3(0.0f, 0.0f, -90f), 0.25f).SetEase(Ease.Linear);
             Object.FindObjectOfType<BeastBehavior>().SetAnimatorTrigger("StopInhale");
-            CallDeathUi(billy, 31, 4f);
+            return CallDeathUi(billy, 31, 4f);
         }
 
-        private void LilyGetSuckedIn()
+        private bool LilyGetSuckedIn()
         {
-            var lily = Object.FindObjectOfType<Lily>();
+            var lily = _unityActions.FindOrCreateNpc<Lily>();
             var billy = lily.GetNPC("Billy");
-            _characterActions.MoveNPCToCurrentRoom(lily);
-            _characterActions.MoveNPCToCurrentRoom(billy);
+            if (!_unityActions.MoveNPCToRangedDistance(lily))
+            {
+                return false;
+            }
+
+            if (!_unityActions.MoveNPCToRangedDistance(billy))
+            {
+                return false;
+            }
+
             lily.ClearCameraTarget();
             lily.player.SetPlayerState(PlayerState.AnimState);
             Object.FindObjectOfType<BeastBehavior>().SetAnimatorTrigger("StartInhale");
-            GameObject.Find("Particle Inhale").GetComponent<ParticleSystem>().Play();
+            var particleinhale = _unityActions.FindOrCreateByName("Particle Inhale");
+            particleinhale.GetComponent<ParticleSystem>().Play();
             AudioController.instance.PlaySound("BeastSuck");
             lily.overrideMovementCode = true;
             lily.EnableSpriteMasks();
@@ -265,59 +345,68 @@ namespace Archipelagarten2.Death
             lily.player.transform.DOLocalMove(new Vector3(-4f, -0.54f), 3f).SetEase(Ease.Linear);
             lily.player.transform.DOLocalRotate(new Vector3(0.0f, 0.0f, -90f), 0.25f).SetEase(Ease.Linear);
             Object.FindObjectOfType<BeastBehavior>().SetAnimatorTrigger("StopInhale", 4f);
-            CallDeathUi(billy, 32, 4f);
+
+            return CallDeathUi(billy, 32, 4f);
         }
 
-        private void CreatureKillNotDistracted()
-        {
-            PlayerWalkToMonster();
-            CallDeathUi(Object.FindObjectOfType<UIController>(), 22, 2f);
-            AudioController.instance.PlaySound("GoreSplat2");
-        }
+        private bool CreatureKillNotDistracted() => CreatureKill(22);
 
-        private void CreatureKillTooClose()
-        {
-            PlayerWalkToMonster();
-            CallDeathUi(Object.FindObjectOfType<UIController>(), 23, 2f);
-            AudioController.instance.PlaySound("GoreSplat2");
-        }
+        private bool CreatureKillTooClose() => CreatureKill(23);
 
-        private void CreatureKillLookingAtYou()
-        {
-            PlayerWalkToMonster();
-            CallDeathUi(Object.FindObjectOfType<UIController>(), 63, 2f);
-            AudioController.instance.PlaySound("GoreSplat2");
-        }
+        private bool CreatureKillLookingAtYou() => CreatureKill(63);
 
-        private void CreatureKillBeforeGoingForPrincipal()
-        {
-            PlayerWalkToMonster();
-            CallDeathUi(Object.FindObjectOfType<UIController>(), 64, 2f);
-            AudioController.instance.PlaySound("GoreSplat2");
-        }
+        private bool CreatureKillBeforeGoingForPrincipal() => CreatureKill(64);
 
-        private void PlayerWalkToMonster()
+        private bool PlayerWalkToMonster()
         {
-            GameObject.Find("PlayerHeadBloodSplatter").GetComponent<ParticleSystem>().Play();
-            var playerController = Object.FindObjectOfType<PlayerController>();
-            var creature = Object.FindObjectOfType<CreatureBehavior>();
-            _characterActions.MoveNPCToCurrentRoom(creature);
-            var creatureAnimationEvents = Object.FindObjectOfType<CreatureAnimationEvents>();
+            var playerHeadBloodSplatter = _unityActions.FindOrCreateByName("PlayerHeadBloodSplatter");
+            playerHeadBloodSplatter.GetComponent<ParticleSystem>().Play();
+            var playerController = _unityActions.FindOrCreatePlayer();
+            var creature = _unityActions.FindOrCreateNpc<CreatureBehavior>();
+            if (!_unityActions.MoveNPCToRangedDistance(creature))
+            {
+                return false;
+            }
+
+            var creatureAnimationEvents = _unityActions.FindOrCreate<CreatureAnimationEvents>();
             playerController.transform.SetParent(creatureAnimationEvents.transform.parent.parent);
             playerController.transform.DOLocalRotate(new Vector3(0.0f, 0.0f, 0.0f), 0.2f);
             playerController.SetAnimatorTrigger("FallDown");
             var mStoreY = (float)typeof(CreatureAnimationEvents).GetField("mStoreY", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(creatureAnimationEvents);
             playerController.WalkToPoint(new Vector3(Mathf.Min(2.5f, creatureAnimationEvents.transform.parent.position.x + 1.2f), mStoreY), 0.4f);
             playerController.SetShadowEnabled(true);
+
+            return true;
         }
 
-        private void ExplodePlayer()
+        private bool CreatureKill(int killId)
         {
-            var jerome = Object.FindObjectOfType<Jerome>();
-            _characterActions.MoveNPCToCurrentRoom(jerome);
+            if (!PlayerWalkToMonster())
+            {
+                return false;
+            }
+
+            if (!CallDeathUi(Object.FindObjectOfType<UIController>(), killId, 2f))
+            {
+                return false;
+            }
+
+            AudioController.instance.PlaySound("GoreSplat2");
+            return true;
+        }
+
+        private bool ExplodePlayer()
+        {
+            var jerome = _unityActions.FindOrCreateNpc<Jerome>();
+            if (!_unityActions.MoveNPCToRangedDistance(jerome))
+            {
+                return false;
+            }
+
             EnvironmentController.Instance.UseItem(Item.JeromeBomb);
             jerome.player.SetPlayerState(PlayerState.AnimState);
             jerome.StartCoroutine(Beep3Times(jerome));
+            return true;
         }
 
         private IEnumerator Beep3Times(Jerome jerome)
@@ -334,53 +423,51 @@ namespace Archipelagarten2.Death
             CallDeathUi(jerome, 24, 3);
         }
 
-        private void FailSwingPuzzle()
+        private bool FailSwingPuzzle()
         {
-            var jerome = Object.FindObjectOfType<Jerome>();
-            _characterActions.MoveNPCToCurrentRoom(jerome);
+            var jerome = _unityActions.FindOrCreateNpc<Jerome>();
+            if (!_unityActions.MoveNPCToRangedDistance(jerome))
+            {
+                return false;
+            }
+
             jerome.player.Explode();
             jerome.player.SetPlayerState(PlayerState.AnimState);
             Object.FindObjectOfType<CameraController>().CameraShake(0.25f);
-            CallDeathUi(jerome, 34, 3);
+            return CallDeathUi(jerome, 34, 3);
         }
 
-        private void LunchLadyKillPlayerMorningTime()
-        {
-            LunchLadyKillPlayer(27);
-        }
+        private bool LunchLadyKillPlayerMorningTime() => LunchLadyKillPlayer(27);
 
-        private void LunchLadyKillPlayerCaughtWithRemote()
-        {
-            LunchLadyKillPlayer(48);
-        }
+        private bool LunchLadyKillPlayerCaughtWithRemote() => LunchLadyKillPlayer(48);
 
-        private void LunchLadyKillPlayerNuggetBetterSituation()
-        {
-            LunchLadyKillPlayer(51);
-        }
+        private bool LunchLadyKillPlayerNuggetBetterSituation() => LunchLadyKillPlayer(51);
 
-        private void LunchLadyKillPlayerOutside()
-        {
-            LunchLadyKillPlayer(58);
-        }
+        private bool LunchLadyKillPlayerOutside() => LunchLadyKillPlayer(58);
 
-        private void LunchLadyKillPlayer(int killId)
+        private bool LunchLadyKillPlayer(int killId)
         {
-            var lunchLady = Object.FindObjectOfType<LunchLady>();
-            _characterActions.MoveNPCToCurrentRoom(lunchLady);
+            var lunchLady = _unityActions.FindOrCreateNpc<LunchLady>();
+            if (!_unityActions.MoveNPCToRangedDistance(lunchLady))
+            {
+                return false;
+            }
 
             lunchLady.SetSpriteOrder(1);
             lunchLady.player.SetPlayerState(PlayerState.AnimState);
             lunchLady.GetComponentInChildren<AnimationEvents>().SetTargetCharacter("Player");
             lunchLady.SetAnimatorTrigger("IsAttacking");
-            CallDeathUi(lunchLady, killId, 4f);
             EnvironmentController.Instance.UnlockFullOutfit(21);
+            return CallDeathUi(lunchLady, killId, 4f);
         }
 
-        private void ExplodeChemistry()
+        private bool ExplodeChemistry()
         {
-            var monty = Object.FindObjectOfType<Monty>();
-            _characterActions.MoveNPCToCurrentRoom(monty);
+            var monty = _unityActions.FindOrCreateNpc<Monty>();
+            if (!_unityActions.MoveNPCToRangedDistance(monty))
+            {
+                return false;
+            }
 
             EnvironmentController.Instance.UnlockFullOutfit(5);
             monty.player.SetPlayerState(PlayerState.AnimState);
@@ -389,43 +476,40 @@ namespace Archipelagarten2.Death
             var gameObject = Object.Instantiate((GameObject)Resources.Load("Prefabs/particleFire"));
             gameObject.transform.parent = monty.transform;
             gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, -1f);
-            GameObject.Find("ChemistrySetBurned").transform.localPosition = new Vector3(-1.885f, -0.64f, 0.0f);
-            GameObject.Find("ChemistrySet").GetComponent<SpriteRenderer>().enabled = false;
-            GameObject.Find("ChemistrySetFire").GetComponent<ParticleSystem>().Play();
-            GameObject.Find("ChemistrySetBurst").GetComponent<ParticleSystem>().Play();
+            var chemistrySetBurned = _unityActions.FindOrCreateByName("ChemistrySetBurned");
+            chemistrySetBurned.transform.localPosition = new Vector3(-1.885f, -0.64f, 0.0f);
+            var chemistrySet = _unityActions.FindOrCreateByName("ChemistrySet");
+            chemistrySet.GetComponent<SpriteRenderer>().enabled = false;
+            var chemistrySetFire = _unityActions.FindOrCreateByName("ChemistrySetFire");
+            chemistrySetFire.GetComponent<ParticleSystem>().Play();
+            var chemistrySetBurst = _unityActions.FindOrCreateByName("ChemistrySetBurst");
+            chemistrySetBurst.GetComponent<ParticleSystem>().Play();
             Object.FindObjectOfType<CameraController>().CameraShake(0.25f);
             AudioController.instance.PlaySound("Explosion");
             AudioController.instance.PlaySound("Fire");
-            CallDeathUi(monty, 21, 3f);
+            return CallDeathUi(monty, 21, 3f);
         }
 
-        public void MontyCannonFireLeftUpstairs()
-        {
-            MontyKillCannon(6);
-        }
+        public bool MontyCannonFireLeftUpstairs() => MontyKillCannon(6);
 
-        public void MontyCannonFireChemistry()
-        {
-            MontyKillCannon(20);
-        }
+        public bool MontyCannonFireChemistry() => MontyKillCannon(20);
 
-        public void MontyCannonFireUpstairs()
-        {
-            MontyKillCannon(57);
-        }
+        public bool MontyCannonFireUpstairs() => MontyKillCannon(57);
 
-        public void MontyCannonFireElevatorKey()
-        {
-            MontyKillCannon(62);
-        }
+        public bool MontyCannonFireElevatorKey() => MontyKillCannon(62);
 
-        private void MontyKillCannon(int killId)
+        private bool MontyKillCannon(int killId)
         {
-            var monty = Object.FindObjectOfType<Monty>();
-            _characterActions.MoveNPCToCurrentRoom(monty);
+            var monty = _unityActions.FindOrCreateNpc<Monty>();
+            if (!_unityActions.MoveNPCToRangedDistance(monty))
+            {
+                return false;
+            }
 
             monty.SetCannonDeathIndex(GetOffsetKillId(killId));
             monty.StartCoroutine(OpenAndFireCannon(monty));
+
+            return true;
         }
 
         private static IEnumerator OpenAndFireCannon(Monty monty)
@@ -435,13 +519,16 @@ namespace Archipelagarten2.Death
             monty.FireCannon();
         }
 
-        public void PlayerShotByPenny(int killId, bool turnOffLights = true)
+        public bool PlayerShotByPenny(int killId, bool turnOffLights = true)
         {
-            var penny = Object.FindObjectOfType<Penny>();
-            _characterActions.MoveNPCToCurrentRoom(penny);
+            var penny = _unityActions.FindOrCreateNpc<Penny>();
+            if (!_unityActions.MoveNPCToRangedDistance(penny))
+            {
+                return false;
+            }
 
             penny.StartCoroutine(PlayerShotInTheDark(penny, turnOffLights));
-            CallDeathUi(penny, killId, 3f);
+            return CallDeathUi(penny, killId, 3f);
         }
 
         private static IEnumerator PlayerShotInTheDark(Penny penny, bool turnOffLights)
@@ -463,10 +550,13 @@ namespace Archipelagarten2.Death
             EnvironmentController.Instance.GetCurrentRoomEventManager().SetLights(true);
         }
 
-        private void OzzyStranglePlayer()
+        private bool OzzyStranglePlayer()
         {
-            var ozzy = Object.FindObjectOfType<Ozzy>();
-            _characterActions.MoveNPCToCurrentRoom(ozzy);
+            var ozzy = _unityActions.FindOrCreateNpc<Ozzy>();
+            if (!_unityActions.MoveNPCToRangedDistance(ozzy))
+            {
+                return false;
+            }
 
             ozzy.dontTurnAround = false;
             ozzy.player.SetPlayerState(PlayerState.AnimState);
@@ -475,7 +565,7 @@ namespace Archipelagarten2.Death
             {
                 vector3 = new Vector3(0.122f, -0.008f);
             }
-            
+
             ozzy.SetFacialExpression(FacialExpression.Angry);
             ozzy.WalkToPoint(ozzy.player.transform.localPosition + vector3, 0.0f, () =>
             {
@@ -487,57 +577,63 @@ namespace Archipelagarten2.Death
                 ozzy.player.headSpriteRenderer.DOColor(new Color(0.8f, 0.8f, 1f), 1f);
                 CallDeathUi(ozzy, 8, 4f);
             });
+
+            return true;
         }
 
-        public void GetFaceEaten()
+        public bool GetFaceEaten()
         {
-            var playerController = Object.FindObjectOfType<PlayerController>();
+            var playerController = _unityActions.FindOrCreatePlayer();
 
             playerController.ApplyFaceOverlay("Kid_Overlay_Eaten");
             playerController.GetComponentInChildren<Animator>().SetBool("Decapitation", true);
             playerController.SetPlayerState(PlayerState.AnimState);
-            GameObject.Find("PlayerHeadBloodStream").GetComponent<ParticleSystem>().Play();
-            CallDeathUi(10, 2f);
+            var playerHeadBloodStream = _unityActions.FindOrCreateByName("PlayerHeadBloodStream");
+            playerHeadBloodStream.GetComponent<ParticleSystem>().Play();
+            return CallDeathUi(10, 2f);
         }
 
-        public void GetElectrocuted()
+        public bool GetElectrocuted()
         {
-            var playerController = Object.FindObjectOfType<PlayerController>();
+            var playerController = _unityActions.FindOrCreatePlayer();
 
             playerController.GetComponentInChildren<Animator>().SetBool("Electrocution", true);
             playerController.SetPlayerState(PlayerState.AnimState);
-            CallDeathUi(33, 3f);
+            return CallDeathUi(33, 3f);
         }
 
-        public void GetPoisoned()
+        public bool GetPoisoned()
         {
-            var playerController = Object.FindObjectOfType<PlayerController>();
+            var playerController = _unityActions.FindOrCreatePlayer();
 
             playerController.SetPlayerState(PlayerState.AnimState);
             playerController.GetComponentInChildren<Animator>().SetBool("Poison", true);
-            CallDeathUi(49, 3f);
+            return CallDeathUi(49, 3f);
         }
 
-        private void DieByBees()
+        private bool DieByBees()
         {
-            var playerController = Object.FindObjectOfType<PlayerController>();
+            var playerController = _unityActions.FindOrCreatePlayer();
             playerController.SetPlayerState(PlayerState.AnimState);
-            CallBees(playerController);
+            return CallBees(playerController);
         }
 
-        private void CallBees(PlayerController playerController)
+        private bool CallBees(PlayerController playerController)
         {
-            GameObject bees = GameObject.Find("BeesObject");
-            GameObject.Find("BeesRoot").GetComponent<Animator>().speed = 2f;
+            GameObject bees = _unityActions.FindOrCreateByName("BeesObject");
+            var beesRoot = _unityActions.FindOrCreateByName("BeesRoot");
+            beesRoot.GetComponent<Animator>().speed = 2f;
             AudioController.instance.PlaySound("Bees");
             bees.transform.DOMove(playerController.transform.position, 1f).OnComplete(() => GetStung(playerController));
+            return true;
         }
 
-        private void GetStung(PlayerController playerController)
+        private bool GetStung(PlayerController playerController)
         {
             playerController.ApplyNewFace(EnvironmentController.Instance.saveFile.CurrentHairStyle, playerController.stungFace);
             playerController.GetComponentInChildren<Animator>().SetBool("Stung", true);
             playerController.StartCoroutine(StopBees());
+            return true;
         }
 
         private IEnumerator StopBees()
@@ -547,55 +643,76 @@ namespace Archipelagarten2.Death
             CallDeathUi(9);
         }
 
-        private void BuggsKillPlayerDodgeball()
+        private bool BuggsKillPlayerDodgeball()
         {
-            var buggs = Object.FindObjectOfType<Buggs>();
-            _characterActions.MoveNPCToCurrentRoom(buggs);
+            var buggs = _unityActions.FindOrCreateNpc<Buggs>();
+            if (!_unityActions.MoveNPCToRangedDistance(buggs))
+            {
+                return false;
+            }
 
             buggs.player.SetPlayerState(PlayerState.AnimState);
             buggs.ThrowItem(buggs.player.transform.localPosition + new Vector3(0.0f, 0.08f), 0.3f, () =>
             {
-                GameObject.Find("DodgeballFloorMid").GetComponent<BoxCollider2D>().enabled = true;
-                GameObject.Find("DodgeballMiddle").GetComponent<CircleCollider2D>().enabled = false;
+                var dodgeballFloorMid = _unityActions.FindOrCreateByName("DodgeballFloorMid");
+                dodgeballFloorMid.GetComponent<BoxCollider2D>().enabled = true;
+                var dodgeballMiddle = _unityActions.FindOrCreateByName("DodgeballMiddle");
+                dodgeballMiddle.GetComponent<CircleCollider2D>().enabled = false;
                 HeadFlyOff(13, "DodgeballMiddle");
             });
+
+            return true;
         }
 
-        private void CarlaThrowDodgeballAtPlayer()
+        private bool CarlaThrowDodgeballAtPlayer()
         {
-            var carla = Object.FindObjectOfType<Carla>();
-            _characterActions.MoveNPCToCurrentRoom(carla);
+            var carla = _unityActions.FindOrCreateNpc<Carla>();
+            if (!_unityActions.MoveNPCToRangedDistance(carla))
+            {
+                return false;
+            }
 
             carla.player.SetPlayerState(PlayerState.AnimState);
             carla.ThrowItem(carla.player.transform.localPosition + new Vector3(0.0f, 0.08f), 0.3f, () =>
             {
-                GameObject.Find("DodgeballMiddle").GetComponent<CircleCollider2D>().enabled = false;
+                var dodgeballMiddle = _unityActions.FindOrCreateByName("DodgeballMiddle");
+                dodgeballMiddle.GetComponent<CircleCollider2D>().enabled = false;
                 HeadFlyOff(12, "DodgeballMiddle");
             });
+
+            return true;
         }
 
-        private void NuggetThrowBallButPlayerInTheWay()
+        private bool NuggetThrowBallButPlayerInTheWay()
         {
-            var nugget = Object.FindObjectOfType<Nugget>();
-            _characterActions.MoveNPCToCurrentRoom(nugget);
+            var nugget = _unityActions.FindOrCreateNpc<Nugget>();
+            if (!_unityActions.MoveNPCToRangedDistance(nugget))
+            {
+                return false;
+            }
 
             nugget.player.SetPlayerState(PlayerState.AnimState);
-            GameObject.Find("DodgeballFloorMid").GetComponent<BoxCollider2D>().enabled = false;
-            GameObject.Find("DodgeballFloorLow").GetComponent<BoxCollider2D>().enabled = true;
+            var dodgeballFloorMid = _unityActions.FindOrCreateByName("DodgeballFloorMid");
+            dodgeballFloorMid.GetComponent<BoxCollider2D>().enabled = false;
+            var dodgeballFloorLow = _unityActions.FindOrCreateByName("DodgeballFloorLow");
+            dodgeballFloorLow.GetComponent<BoxCollider2D>().enabled = true;
             nugget.ThrowItem(nugget.player.transform.localPosition + new Vector3(0.0f, 0.08f), 0.1f, () =>
             {
-                GameObject.Find("DodgeballBottom").GetComponent<CircleCollider2D>().enabled = false;
+                var dodgeballBottom = _unityActions.FindOrCreateByName("DodgeballBottom");
+                dodgeballBottom.GetComponent<CircleCollider2D>().enabled = false;
                 HeadFlyOff(14, "DodgeballBottom", true);
             });
+
+            return true;
         }
 
-        public void HeadFlyOff(int x, string ball)
+        public bool HeadFlyOff(int x, string ball)
         {
-            var playerController = Object.FindObjectOfType<PlayerController>();
+            var playerController = _unityActions.FindOrCreatePlayer();
 
             playerController.ApplyFaceOverlay("Kid_Overlay_Decapitation");
             AudioController.instance.PlaySound("GoreSplat1");
-            GameObject gameObject = GameObject.Find("PlayerHeadDecapitated");
+            GameObject gameObject = _unityActions.FindOrCreateByName("PlayerHeadDecapitated");
             playerController.GetDecapitated();
             gameObject.transform.position = playerController.head.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sprite = playerController.head.GetComponent<SpriteRenderer>().sprite;
@@ -604,17 +721,17 @@ namespace Archipelagarten2.Death
             gameObject.GetComponent<Rigidbody2D>().AddTorque(-1f);
             GameObject.Find(ball).GetComponent<SpriteRenderer>().enabled = false;
             playerController.headSpriteRenderer.sprite = GameObject.Find(ball).GetComponent<SpriteRenderer>().sprite;
-            CallDeathUi(x, 2f);
+            return CallDeathUi(x, 2f);
         }
 
-        public void HeadFlyOff(int x, string ball, bool dir)
+        public bool HeadFlyOff(int x, string ball, bool dir)
         {
-            var playerController = Object.FindObjectOfType<PlayerController>();
+            var playerController = _unityActions.FindOrCreatePlayer();
 
             AudioController.instance.PlaySound("GoreSplat1");
             playerController.ApplyFaceOverlay("Kid_Overlay_Decapitation");
             playerController.SetDirection(false);
-            GameObject gameObject = GameObject.Find("PlayerHeadDecapitated");
+            GameObject gameObject = _unityActions.FindOrCreateByName("PlayerHeadDecapitated");
             playerController.GetDecapitated();
             gameObject.transform.position = playerController.head.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sprite = playerController.head.GetComponent<SpriteRenderer>().sprite;
@@ -624,51 +741,57 @@ namespace Archipelagarten2.Death
             gameObject.GetComponent<Rigidbody2D>().AddTorque(1f);
             GameObject.Find(ball).GetComponent<SpriteRenderer>().enabled = false;
             playerController.headSpriteRenderer.sprite = GameObject.Find(ball).GetComponent<SpriteRenderer>().sprite;
-            CallDeathUi(x, 2f);
+            return CallDeathUi(x, 2f);
         }
 
-        public void ShotByScienceTeacher(int killId)
+        public bool ShotByScienceTeacher(int killId)
         {
-            var scienceTeacher = Object.FindObjectOfType<ScienceTeacher>();
-            _characterActions.MoveNPCToCurrentRoom(scienceTeacher);
+            var scienceTeacher = _unityActions.FindOrCreateNpc<ScienceTeacher>();
+
+            if (!_unityActions.MoveNPCToRangedDistance(scienceTeacher))
+            {
+                return false;
+            }
 
             scienceTeacher.player.SetPlayerState(PlayerState.AnimState);
             scienceTeacher.ClearCameraTarget();
             scienceTeacher.FacePlayer();
             scienceTeacher.GetComponentInChildren<Animator>().SetBool(nameof(ScienceTeacher.Shoot), true);
             scienceTeacher.GetComponentInChildren<AnimationEvents>().SetTargetCharacter("Player");
-            CallDeathUi(scienceTeacher, killId, 3f);
             scienceTeacher.GetComponentInChildren<Animator>().SetBool("Shoot", false);
+            return CallDeathUi(scienceTeacher, killId, 3f);
         }
 
-        private void CallDeathUi(Interactable interactable, int killId)
+        private bool CallDeathUi(Interactable interactable, int killId)
         {
-            CallDeathUi(interactable.UI, killId);
+            return interactable != null && CallDeathUi(interactable.UI, killId);
         }
 
-        private void CallDeathUi(int killId)
+        private bool CallDeathUi(int killId)
         {
-            CallDeathUi(Object.FindObjectOfType<UIController>(), killId);
+            return CallDeathUi(Object.FindObjectOfType<UIController>(), killId);
         }
 
-        private void CallDeathUi(UIController uiController, int killId)
+        private bool CallDeathUi(UIController uiController, int killId)
         {
-            uiController.CallDeath(GetOffsetKillId(killId));
+            uiController?.CallDeath(GetOffsetKillId(killId));
+            return uiController != null;
         }
 
-        private void CallDeathUi(Interactable interactable, int killId, float delay)
+        private bool CallDeathUi(Interactable interactable, int killId, float delay)
         {
-            CallDeathUi(interactable.UI, killId, delay);
+            return interactable != null && CallDeathUi(interactable.UI, killId, delay);
         }
 
-        private void CallDeathUi(int killId, float delay)
+        private bool CallDeathUi(int killId, float delay)
         {
-            CallDeathUi(Object.FindObjectOfType<UIController>(), killId, delay);
+            return CallDeathUi(Object.FindObjectOfType<UIController>(), killId, delay);
         }
 
-        private void CallDeathUi(UIController uiController, int killId, float delay)
+        private bool CallDeathUi(UIController uiController, int killId, float delay)
         {
-            uiController.CallDeath(GetOffsetKillId(killId), delay);
+            uiController?.CallDeath(GetOffsetKillId(killId), delay);
+            return uiController != null;
         }
 
         private int GetOffsetKillId(int killId)
@@ -677,16 +800,18 @@ namespace Archipelagarten2.Death
             return offset + killId;
         }
 
-        private void CallPrivateMethod<T>(T obj, string methodName)
+        private bool CallPrivateMethod<T>(T obj, string methodName)
         {
             try
             {
                 var method = typeof(T).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
                 method.Invoke(obj, Array.Empty<object>());
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogErrorException(ex, typeof(T).FullName, methodName);
+                return false;
             }
         }
     }

@@ -6,6 +6,7 @@ using Archipelagarten2.HarmonyPatches.GenericPatches;
 using Archipelagarten2.HarmonyPatches.NPCPatches;
 using Archipelagarten2.HarmonyPatches.DebugPatches;
 using Archipelagarten2.HarmonyPatches.MoneyPatches;
+using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
@@ -18,26 +19,28 @@ namespace Archipelagarten2.HarmonyPatches
         {
         }
 
-        public void InitializeAllPatches(ILogger logger, Harmony harmony, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
+        public void InitializeAllPatches(ILogger logger, Harmony harmony, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker, GameObjectFactory gameObjectFactory)
         {
             InitializeDebugPatches(logger);
-            InitializeGenericPatches(logger, archipelago, locationChecker);
+            InitializeGenericPatches(logger, archipelago, locationChecker, gameObjectFactory);
             InitializeNPCPatches(logger, archipelago, locationChecker);
             InitializeMoneyPatches(logger, archipelago, locationChecker);
-            InitializeDeathPatches(logger, archipelago, locationChecker);
+            InitializeDeathPatches(logger, archipelago, locationChecker, gameObjectFactory);
         }
 
         private static void InitializeDebugPatches(ILogger logger)
         {
             ChangeRoomPatch.Initialize(logger);
             GoToNextAreaPatch.Initialize(logger);
+            WalkToPointPatch1.Initialize(logger);
+            WalkToPointPatch2.Initialize(logger);
         }
 
-        private static void InitializeGenericPatches(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeGenericPatches(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker, GameObjectFactory gameObjectFactory)
         {
             var gameStateWriter = new GameStateWriter(archipelago);
             CreateSavePatch.Initialize(logger, archipelago, gameStateWriter);
-            LoadKG2Patch.Initialize(logger, archipelago);
+            LoadKG2Patch.Initialize(logger, archipelago, gameObjectFactory);
             EndDayPanelPatch.Initialize(logger, archipelago, locationChecker);
             EnterSanctumPatch.Initialize(logger, archipelago, locationChecker);
             UnlockMonstermonPatch.Initialize(logger, archipelago, locationChecker);
@@ -69,10 +72,11 @@ namespace Archipelagarten2.HarmonyPatches
             TakeTedCubbyMoneyPatch.Initialize(logger, archipelago, locationChecker);
         }
 
-        private static void InitializeDeathPatches(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeDeathPatches(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker, GameObjectFactory gameObjectFactory)
         {
             CallDeathPatch.Initialize(logger, archipelago, locationChecker);
             DeathMessagePatch.Initialize(logger, archipelago, locationChecker);
+            BedroomStartPatch.Initialize(logger, archipelago, locationChecker, gameObjectFactory);
         }
     }
 }

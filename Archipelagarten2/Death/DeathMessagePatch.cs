@@ -43,6 +43,8 @@ namespace Archipelagarten2.Death
         {
             try
             {
+                _logger.LogDebug($"__instance.deathXML: {__instance.deathXML}");
+
                 _logger.LogDebugPatchIsRunning(nameof(DeathPanel), nameof(DeathPanel.SetDeathMessage), nameof(DeathMessagePatch), nameof(Prefix), x);
 
                 if (x > DeathId.DEATHLINK_OFFSET)
@@ -56,9 +58,9 @@ namespace Archipelagarten2.Death
                         if (message.DeathIndex == x - DeathId.DEATHLINK_OFFSET)
                         {
                             __instance.deathMessage.text = message.Message
+                                .Replace("your", $"{_playerName}'s")
                                 .Replace("You", _playerName)
-                                .Replace("you", _playerName)
-                                .Replace("your", $"{_playerName}'s");
+                                .Replace("you", _playerName);
                         }
                     }
 
