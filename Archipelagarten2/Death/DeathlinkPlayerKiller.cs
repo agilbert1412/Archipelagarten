@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Archipelagarten2.Constants;
 using Archipelagarten2.UnityObjects;
@@ -9,10 +10,11 @@ using KG2;
 using UnityEngine;
 using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
 using Object = UnityEngine.Object;
+using Random = System.Random;
 
 namespace Archipelagarten2.Death
 {
-    internal class PlayerKiller
+    public class PlayerKiller
     {
         private Dictionary<string, Func<bool>> _killMethods;
         private Dictionary<string, int> _deathIds;
@@ -125,6 +127,34 @@ namespace Archipelagarten2.Death
             _unityActions = unityActions;
             _deathLink = deathLink;
             InitializeKillMethods();
+        }
+
+        public int KillInRandomWay()
+        {
+            var random = new Random();
+            var killMessages = _killMethods.Keys.ToArray();
+            var randomIndex = random.Next(0, killMessages.Length);
+            KillInSpecificWay(randomIndex);
+            return randomIndex;
+        }
+
+        public void KillInSpecificWay(int deathIndex)
+        {
+            var randomMessage = _killMethods.Keys.ToArray()[deathIndex];
+            _logger.LogMessage($"Executing death #{deathIndex}: {randomMessage}");
+            try
+            {
+                if (!_killMethods[randomMessage]())
+                {
+                    DoDefaultDeath(randomMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogErrorException(ex, randomMessage);
+                _logger.LogMessage($"Executing default death instead");
+                DoDefaultDeath(randomMessage);
+            }
         }
 
         public void KillInSpecificWay(string deathMessage)
@@ -299,7 +329,8 @@ namespace Archipelagarten2.Death
             billy.player.SetAnimatorBool("Flail", true);
             billy.player.transform.DOLocalMove(new Vector3(-4f, -0.54f), 3f).SetEase(Ease.Linear);
             billy.player.transform.DOLocalRotate(new Vector3(0.0f, 0.0f, -90f), 0.25f).SetEase(Ease.Linear);
-            Object.FindObjectOfType<BeastBehavior>().SetAnimatorTrigger("StopInhale");
+            var beastBehavior = _unityActions.FindOrCreateOther<BeastBehavior>();
+            beastBehavior.SetAnimatorTrigger("StopInhale");
             return CallDeathUi(billy, 31, 4f);
         }
 
@@ -368,7 +399,7 @@ namespace Archipelagarten2.Death
                 return false;
             }
 
-            var creatureAnimationEvents = _unityActions.FindOrCreate<CreatureAnimationEvents>();
+            var creatureAnimationEvents = _unityActions.FindOrCreateOther<CreatureAnimationEvents>();
             playerController.transform.SetParent(creatureAnimationEvents.transform.parent.parent);
             playerController.transform.DOLocalRotate(new Vector3(0.0f, 0.0f, 0.0f), 0.2f);
             playerController.SetAnimatorTrigger("FallDown");
@@ -620,7 +651,7 @@ namespace Archipelagarten2.Death
 
         private bool CallBees(PlayerController playerController)
         {
-            GameObject bees = _unityActions.FindOrCreateByName("BeesObject");
+            var bees = _unityActions.FindOrCreateByName("BeesObject");
             var beesRoot = _unityActions.FindOrCreateByName("BeesRoot");
             beesRoot.GetComponent<Animator>().speed = 2f;
             AudioController.instance.PlaySound("Bees");
@@ -712,7 +743,7 @@ namespace Archipelagarten2.Death
 
             playerController.ApplyFaceOverlay("Kid_Overlay_Decapitation");
             AudioController.instance.PlaySound("GoreSplat1");
-            GameObject gameObject = _unityActions.FindOrCreateByName("PlayerHeadDecapitated");
+            var gameObject = _unityActions.FindOrCreateByName("PlayerHeadDecapitated");
             playerController.GetDecapitated();
             gameObject.transform.position = playerController.head.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sprite = playerController.head.GetComponent<SpriteRenderer>().sprite;
@@ -731,7 +762,7 @@ namespace Archipelagarten2.Death
             AudioController.instance.PlaySound("GoreSplat1");
             playerController.ApplyFaceOverlay("Kid_Overlay_Decapitation");
             playerController.SetDirection(false);
-            GameObject gameObject = _unityActions.FindOrCreateByName("PlayerHeadDecapitated");
+            var gameObject = _unityActions.FindOrCreateByName("PlayerHeadDecapitated");
             playerController.GetDecapitated();
             gameObject.transform.position = playerController.head.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sprite = playerController.head.GetComponent<SpriteRenderer>().sprite;
@@ -756,10 +787,15 @@ namespace Archipelagarten2.Death
             scienceTeacher.player.SetPlayerState(PlayerState.AnimState);
             scienceTeacher.ClearCameraTarget();
             scienceTeacher.FacePlayer();
-            scienceTeacher.GetComponentInChildren<Animator>().SetBool(nameof(ScienceTeacher.Shoot), true);
-            scienceTeacher.GetComponentInChildren<AnimationEvents>().SetTargetCharacter("Player");
-            scienceTeacher.GetComponentInChildren<Animator>().SetBool("Shoot", false);
-            return CallDeathUi(scienceTeacher, killId, 3f);
+            var animator = scienceTeacher.GetComponentInChildren<Animator>();
+            var animationEvents = scienceTeacher.GetComponentInChildren<AnimationEvents>();
+            _logger.LogDebug($"animator: {animator}");
+            _logger.LogDebug($"animationEvents: {animationEvents}");
+            animator.SetBool("Shoot", true);
+            animationEvents.SetTargetCharacter("Player");
+            var success = CallDeathUi(scienceTeacher, killId, 3f);
+            animator.SetBool("Shoot", false);
+            return success;
         }
 
         private bool CallDeathUi(Interactable interactable, int killId)

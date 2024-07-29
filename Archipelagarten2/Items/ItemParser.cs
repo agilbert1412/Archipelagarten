@@ -15,11 +15,11 @@ namespace Archipelagarten2.Items
         private SlotData _slotData;
         private TrapManager _trapManager;
 
-        public ItemParser(ILogger logger, SlotData slotData, UnityActions characterActions)
+        public ItemParser(ILogger logger, SlotData slotData, UnityActions characterActions, TrapManager trapManager)
         {
             _logger = logger;
             _slotData = slotData;
-            _trapManager = new TrapManager(_logger, characterActions);
+            _trapManager = trapManager;
         }
 
         public void ProcessItem(ReceivedItem item)

@@ -3,7 +3,6 @@ using Archipelagarten2.Constants;
 using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KG2;
-using Object = UnityEngine.Object;
 
 namespace Archipelagarten2.Death
 {

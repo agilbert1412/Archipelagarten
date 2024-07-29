@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using KG2;
 using Object = UnityEngine.Object;
 using UnityEngine.SceneManagement;
@@ -22,7 +22,27 @@ namespace Archipelagarten2.UnityObjects
         {
         }
 
+        //public bool TryCreatePanel<T>(out T createdObject) where T : PanelBehavior
+        //{
+        //    return TryCreate<T>(out createdObject, "Panels");
+        //}
+
+        public bool TryCreateInteractable<T>(out T createdObject) where T : Interactable
+        {
+            return TryCreate(out createdObject, "Interactables");
+        }
+
         public bool TryCreateNPC<T>(out T createdObject) where T : NPCBehavior
+        {
+            return TryCreate(out createdObject, "NPCs");
+        }
+
+        public bool TryCreateOther<T>(out T createdObject) where T : MonoBehaviour
+        {
+            return TryCreate(out createdObject, "NPCs");
+        }
+
+        public bool TryCreate<T>(out T createdObject, string parentName) where T : MonoBehaviour
         {
             var player = Object.FindObjectOfType<PlayerController>();
             _logger.LogMessage($"\tTrying to create an instance of {typeof(T)}");
@@ -31,6 +51,13 @@ namespace Archipelagarten2.UnityObjects
 
             var currentScene = SceneManager.GetActiveScene();
             var roomEventManager = Object.FindObjectOfType<RoomEventManager>();
+
+            if (!TryFindSpecificChild(roomEventManager.transform, parentName, out var currentParent))
+            {
+                _logger.LogMessage($"\tCould not find '{parentName}' for the found object");
+                createdObject = null;
+                return false;
+            }
 
             foreach (var timeOfDay in Enum.GetValues(typeof(TimeOfDay)).Cast<TimeOfDay>())
             {
@@ -45,6 +72,7 @@ namespace Archipelagarten2.UnityObjects
 
                 while (!loadSceneOperation.isDone)
                 {
+                    Thread.Sleep(10);
                     // _logger.LogMessage($"\tWaiting...");
                 }
 
@@ -54,25 +82,8 @@ namespace Archipelagarten2.UnityObjects
                 {
                     _logger.LogMessage($"\tFound one! Trying to assign it to the current room");
 
-                    // SceneManager.MoveGameObjectToScene(foundObject.gameObject, currentScene);
-                    
-
-                    if (!TryFindSpecificChild(roomEventManager.transform, "NPCs", out var currentNpcs))
-                    {
-                        _logger.LogMessage($"\tCould not find 'NPCs' for the found object");
-                        continue;
-                    }
-
-                    foundObject.transform.parent = currentNpcs;
-                    // Object.DontDestroyOnLoad();
+                    foundObject.transform.parent = currentParent;
                     createdObject = foundObject;
-
-                    // createdObject = Object.Instantiate(foundObject);
-
-                    _logger.LogMessage($"\tfoundObject.transform.parent: {foundObject.transform.parent}");
-                    _logger.LogMessage($"\tfoundObject.transform.parent.parent: {foundObject.transform.parent.parent}");
-                    _logger.LogMessage($"\tfoundObject.transform.parent.parent.GetComponent<RoomEventManager>(): {foundObject.transform.parent.parent.GetComponent<RoomEventManager>()}");
-
                     if (createdObject is Interactable interactable)
                     {
                         interactable.player = player;
@@ -83,19 +94,9 @@ namespace Archipelagarten2.UnityObjects
 
                     while (!unloadSceneOperation.isDone)
                     {
+                        Thread.Sleep(10);
                         // _logger.LogMessage($"\tWaiting...");
                     }
-
-
-                    if (createdObject is NPCBehavior npcBehavior)
-                    {
-                        _logger.LogMessage($"\tnpcBehavior.GetComponent<Collider2D>(): {npcBehavior.GetComponent<Collider2D>()}");
-                    }
-
-                    _logger.LogMessage($"\tfoundObject.transform.parent: {foundObject.transform.parent}");
-                    _logger.LogMessage($"\tfoundObject.transform.parent.parent: {foundObject.transform.parent.parent}");
-                    _logger.LogMessage($"\tfoundObject.transform.parent.parent.GetComponent<RoomEventManager>(): {foundObject.transform.parent.parent.GetComponent<RoomEventManager>()}");
-                    _logger.LogMessage($"\tfoundObject.transform.parent.parent.GetComponent<RoomEventManager>().pathFinder: {foundObject.transform.parent.parent.GetComponent<RoomEventManager>().pathFinder}");
 
                     return true;
                 }

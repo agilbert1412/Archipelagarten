@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.Death;
 using Archipelagarten2.HarmonyPatches;
 using Archipelagarten2.Items;
 using Archipelagarten2.Serialization;
@@ -31,7 +32,7 @@ namespace Archipelagarten2
         private LocationChecker _locationChecker;
         private KindergartenItemManager _itemManager;
         private GameObjectFactory _gameObjectFactory;
-        private UnityActions _characterActions;
+        private UnityActions _unityActions;
 
         private void Awake()
         {
@@ -61,19 +62,20 @@ namespace Archipelagarten2
         {
             _patcherInitializer = new PatchInitializer();
             _gameObjectFactory = new GameObjectFactory(_logger);
-            _characterActions = new UnityActions(_logger, _gameObjectFactory);
-            _archipelago = new KindergartenArchipelagoClient(_logger, _characterActions, OnItemReceived);
+            _unityActions = new UnityActions(_logger, _gameObjectFactory);
+            _archipelago = new KindergartenArchipelagoClient(_logger, _unityActions, OnItemReceived);
         }
 
         private void InitializeAfterConnection()
         {
+            var trapManager = new TrapManager(_logger, _unityActions);
             _locationChecker = new LocationChecker(_logger, _archipelago, new List<string>());
-            _itemManager = new KindergartenItemManager(_logger, _archipelago, _characterActions, new List<ReceivedItem>());
+            _itemManager = new KindergartenItemManager(_logger, _archipelago, _unityActions, trapManager, new List<ReceivedItem>());
 
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();
             _itemManager.UpdateItemsAlreadyProcessed();
-            _patcherInitializer.InitializeAllPatches(_logger, _harmony, _archipelago, _locationChecker, _gameObjectFactory);
+            _patcherInitializer.InitializeAllPatches(_logger, _harmony, _archipelago, _locationChecker, _gameObjectFactory, _unityActions, trapManager);
         }
 
         private void ConnectToArchipelago()

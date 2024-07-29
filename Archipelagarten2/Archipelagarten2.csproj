@@ -22,7 +22,7 @@
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.0.19" />
+    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.0.21" />
     <PackageReference Include="Mono.pdb2mdb" Version="0.1.0.20130128" />
     <PackageReference Include="Mono.Unofficial.pdb2mdb" Version="4.2.3.4" />
     <PackageReference Include="UnityEngine.Modules" Version="2020.3.26" IncludeAssets="compile" />
@@ -51,8 +51,17 @@
     <Reference Include="DOTween50">
       <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween50.dll</HintPath>
     </Reference>
+    <Reference Include="Rewired_Core">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Rewired_Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Rewired_Windows">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Rewired_Windows.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.InputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.UI.dll</HintPath>

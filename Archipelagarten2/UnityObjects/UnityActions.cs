@@ -1,7 +1,6 @@
 ﻿using System;
 using KG2;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
 using Object = UnityEngine.Object;
 
@@ -9,8 +8,8 @@ namespace Archipelagarten2.UnityObjects
 {
     public class UnityActions
     {
-        private const float DISTANCE_OFFSCREEN = 4f;
-        private const float DISTANCE_RANGED = 2f;
+        private const float DISTANCE_OFFSCREEN = 3f;
+        private const float DISTANCE_RANGED = 1.5f;
         private const float DISTANCE_MELEE = 0.255f;
 
         private ILogger _logger;
@@ -55,7 +54,20 @@ namespace Archipelagarten2.UnityObjects
 
         public ObjectInteractable FindOrCreateInteractable()
         {
-            return FindOrCreate<ObjectInteractable>();
+            var gameObject = Object.FindObjectOfType<ObjectInteractable>();
+
+            if (gameObject != null)
+            {
+                return gameObject;
+            }
+
+            if (_factory.TryCreateInteractable(out gameObject))
+            {
+                return gameObject;
+            }
+
+            gameObject = new ObjectInteractable();
+            return gameObject;
         }
 
         public PlayerController FindOrCreatePlayer()
@@ -66,10 +78,23 @@ namespace Archipelagarten2.UnityObjects
 
         public T FindOrCreatePanel<T>() where T : PanelBehavior, new()
         {
-            return FindOrCreate<T>();
+            var gameObject = Object.FindObjectOfType<T>();
+
+            if (gameObject != null)
+            {
+                return gameObject;
+            }
+
+            //if (_factory.TryCreatePanel(out gameObject))
+            //{
+            //    return gameObject;
+            //}
+
+            gameObject = new T();
+            return gameObject;
         }
 
-        public T FindOrCreate<T>() where T : MonoBehaviour, new()
+        public T FindOrCreateOther<T>() where T : MonoBehaviour, new()
         {
             var gameObject = Object.FindObjectOfType<T>();
 
@@ -78,10 +103,10 @@ namespace Archipelagarten2.UnityObjects
                 return gameObject;
             }
 
-            //if (_factory.TryCreate(out gameObject))
-            //{
-            //    return gameObject;
-            //}
+            if (_factory.TryCreateOther<T>(out gameObject))
+            {
+                return gameObject;
+            }
 
             gameObject = new T();
             return gameObject;
@@ -115,6 +140,15 @@ namespace Archipelagarten2.UnityObjects
             if (currentDistance < distanceFromPlayer)
             {
                 return true;
+            }
+
+            if (currentDistance > DISTANCE_OFFSCREEN)
+            {
+                _logger.LogDebug($"Teleporting {npc} a bit closer before walking");
+                var dest = new Vector3(npc.player.transform.localPosition.x - DISTANCE_OFFSCREEN, npc.player.transform.localPosition.y, npc.player.transform.localPosition.z);
+                var path = new Vector3[1] { dest };
+                npc.WalkPath(path, 0.0f, npc.FacePlayer);
+                _logger.LogDebug($"Successfully teleported {npc} closer to the player");
             }
 
             var playerOffsetX = -distanceFromPlayer;

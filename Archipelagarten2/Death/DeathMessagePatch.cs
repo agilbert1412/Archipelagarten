@@ -43,7 +43,7 @@ namespace Archipelagarten2.Death
         {
             try
             {
-                _logger.LogDebug($"__instance.deathXML: {__instance.deathXML}");
+                // _logger.LogDebug($"__instance.deathXML: {__instance.deathXML}");
 
                 _logger.LogDebugPatchIsRunning(nameof(DeathPanel), nameof(DeathPanel.SetDeathMessage), nameof(DeathMessagePatch), nameof(Prefix), x);
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Archipelagarten2.Archipelago;
+using Archipelagarten2.Death;
 using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
@@ -12,10 +13,10 @@ namespace Archipelagarten2.Items
         private KindergartenArchipelagoClient _archipelago;
         private ItemParser _itemParser;
 
-        public KindergartenItemManager(ILogger logger, KindergartenArchipelagoClient archipelago, UnityActions characterActions, IEnumerable<ReceivedItem> itemsAlreadyProcessed) : base(archipelago, itemsAlreadyProcessed)
+        public KindergartenItemManager(ILogger logger, KindergartenArchipelagoClient archipelago, UnityActions characterActions, TrapManager trapManager, IEnumerable<ReceivedItem> itemsAlreadyProcessed) : base(archipelago, itemsAlreadyProcessed)
         {
             _archipelago = archipelago;
-            _itemParser = new ItemParser(logger, archipelago.SlotData, characterActions);
+            _itemParser = new ItemParser(logger, archipelago.SlotData, characterActions, trapManager);
         }
 
         protected override void ProcessItem(ReceivedItem receivedItem, bool immediatelyIfPossible)

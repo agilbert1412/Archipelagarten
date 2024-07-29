@@ -19,21 +19,21 @@ namespace Archipelagarten2.HarmonyPatches
         {
         }
 
-        public void InitializeAllPatches(ILogger logger, Harmony harmony, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker, GameObjectFactory gameObjectFactory)
+        public void InitializeAllPatches(ILogger logger, Harmony harmony, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker, GameObjectFactory gameObjectFactory, UnityActions unityActions, TrapManager trapManager)
         {
-            InitializeDebugPatches(logger);
+            InitializeDebugPatches(logger, unityActions, trapManager);
             InitializeGenericPatches(logger, archipelago, locationChecker, gameObjectFactory);
             InitializeNPCPatches(logger, archipelago, locationChecker);
             InitializeMoneyPatches(logger, archipelago, locationChecker);
             InitializeDeathPatches(logger, archipelago, locationChecker, gameObjectFactory);
         }
 
-        private static void InitializeDebugPatches(ILogger logger)
+        private static void InitializeDebugPatches(ILogger logger, UnityActions unityActions, TrapManager trapManager)
         {
             ChangeRoomPatch.Initialize(logger);
             GoToNextAreaPatch.Initialize(logger);
-            WalkToPointPatch1.Initialize(logger);
-            WalkToPointPatch2.Initialize(logger);
+            WalkToPointPatch.Initialize(logger);
+            HandleInputPatch.Initialize(logger, unityActions, trapManager);
         }
 
         private static void InitializeGenericPatches(ILogger logger, KindergartenArchipelagoClient archipelago, LocationChecker locationChecker, GameObjectFactory gameObjectFactory)
@@ -77,6 +77,7 @@ namespace Archipelagarten2.HarmonyPatches
             CallDeathPatch.Initialize(logger, archipelago, locationChecker);
             DeathMessagePatch.Initialize(logger, archipelago, locationChecker);
             BedroomStartPatch.Initialize(logger, archipelago, locationChecker, gameObjectFactory);
+            SetFacialExpressionPatch.Initialize(logger);
         }
     }
 }
