@@ -15,7 +15,7 @@ namespace Archipelagarten2.Constants
             { 6, "Tiny Squid" },
             { 7, "Coral That Looks Like Hand" },
             { 8, "Hermit Frog" },
-            { 9, "Castle of Sand" },
+            { 9, "Castle Of Sand" },
             { 10, "Man On Fire" },
             { 11, "Chair of Spikes" },
             { 12, "Cigaretmon" },
