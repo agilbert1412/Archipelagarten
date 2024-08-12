@@ -1,110 +1,119 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Archipelagarten2</AssemblyName>
-    <Product>Archipelago Randomizer for Kindergarten 2</Product>
-    <Version>1.1.1</Version>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <RestoreAdditionalProjectSources>
-      https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
-    </RestoreAdditionalProjectSources>
-    <RootNamespace>Archipelagarten2</RootNamespace>
-    <DebugType>Full</DebugType>
-	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>Archipelagarten2</AssemblyName>
+		<Product>Archipelago Randomizer for Kindergarten 2</Product>
+		<Version>1.1.1</Version>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+		<RestoreAdditionalProjectSources>
+			https://api.nuget.org/v3/index.json;
+			https://nuget.bepinex.dev/v3/index.json;
+			https://nuget.samboy.dev/v3/index.json
+		</RestoreAdditionalProjectSources>
+		<RootNamespace>Archipelagarten2</RootNamespace>
+		<DebugType>Full</DebugType>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.2.0" />
-    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.0.21" />
-    <PackageReference Include="Mono.pdb2mdb" Version="0.1.0.20130128" />
-    <PackageReference Include="Mono.Unofficial.pdb2mdb" Version="4.2.3.4" />
-    <PackageReference Include="UnityEngine.Modules" Version="2020.3.26" IncludeAssets="compile" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Archipelago.MultiClient.Net" Version="6.3.0" />
+		<PackageReference Include="Archipelago.MultiClient.Net.Analyzers" Version="1.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+		<PackageReference Include="BepInEx.Core" Version="5.*" />
+		<PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+		<PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.0.21" />
+		<PackageReference Include="Mono.pdb2mdb" Version="0.1.0.20130128" />
+		<PackageReference Include="Mono.Unofficial.pdb2mdb" Version="4.2.3.4" />
+		<PackageReference Include="UnityEngine.Modules" Version="2020.3.26" IncludeAssets="compile" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IdTables\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="IdTables\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween43">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween43.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween46">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween46.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween50">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween50.dll</HintPath>
-    </Reference>
-    <Reference Include="Rewired_Core">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Rewired_Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Rewired_Windows">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Rewired_Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputModule">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.InputModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="Assembly-CSharp">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="Assembly-CSharp-firstpass">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+		</Reference>
+		<Reference Include="DOTween">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween.dll</HintPath>
+		</Reference>
+		<Reference Include="DOTween43">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween43.dll</HintPath>
+		</Reference>
+		<Reference Include="DOTween46">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween46.dll</HintPath>
+		</Reference>
+		<Reference Include="DOTween50">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\DOTween50.dll</HintPath>
+		</Reference>
+		<Reference Include="Rewired_Core">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Rewired_Core.dll</HintPath>
+		</Reference>
+		<Reference Include="Rewired_Windows">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\Rewired_Windows.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.InputModule">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI">
+			<HintPath>..\..\Kindergarten 2\Kindergarten2_Data\Managed\UnityEngine.UI.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="IdTables\kindergarten_2_item_table.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="IdTables\kindergarten_2_location_table.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="IdTables\kindergarten_2_item_table.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="IdTables\kindergarten_2_location_table.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
-  <PropertyGroup Label="UserMacros">
-    <GamePath>..\..\Kindergarten 2 Debug\</GamePath>
-    <PluginsPath>$(GamePath)BepInEx\plugins\Archipelagarten\</PluginsPath>
-    <BepInExLauncher>Kindergarten2.exe</BepInExLauncher>
-  </PropertyGroup>
+	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+	</ItemGroup>
 
-  <Target Name="BeforeBuild">
+	<PropertyGroup Label="UserMacros">
+		<GamePath>..\..\Kindergarten 2 Debug\</GamePath>
+		<PluginsPath>$(GamePath)BepInEx\plugins\Archipelagarten\</PluginsPath>
+		<BepInExLauncher>Kindergarten2.exe</BepInExLauncher>
+	</PropertyGroup>
 
-  </Target>
-  <Target Name="Copy mod to debug folder" AfterTargets="Build">
-    <Message Text="Copying the mod to the plugins folder $(OutputPath)$(ProjectName).dll -&gt; $(PluginsPath)" Importance="High" />
-    <Copy SourceFiles="$(OutputPath)$(ProjectName).dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
-    <Copy SourceFiles="$(OutputPath)$(ProjectName).pdb" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
-    <!-- <Copy SourceFiles="$(OutputPath)Newtonsoft.Json.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
-    <Copy SourceFiles="$(OutputPath)Archipelago.MultiClient.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
-    <Copy SourceFiles="$(OutputPath)KaitoKid.ArchipelagoUtilities.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
-    <!--<Copy SourceFiles="$(OutputPath)Archipelago.Gifting.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
-    <!--<Copy SourceFiles="$(OutputPath)websocket-sharp.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
-    <!--<Copy SourceFiles="$(OutputPath)SpriteSheetRuntime.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
-    <Copy SourceFiles="$(OutputPath)IdTables\kindergarten_2_item_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
-    <Copy SourceFiles="$(OutputPath)IdTables\kindergarten_2_location_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
-    <!--<Copy SourceFiles="$(OutputPath)Textures\Coins\cracked.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
-    <!--<Copy SourceFiles="$(OutputPath)Textures\Coins\piece.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
-    <!--<Copy SourceFiles="$(OutputPath)Textures\Coins\pile.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
-    <Message Text="Copied mod files" Importance="High" />
-  </Target>
+	<Target Name="BeforeBuild">
+
+	</Target>
+	<Target Name="Copy mod to debug folder" AfterTargets="Build">
+		<Message Text="Copying the mod to the plugins folder $(OutputPath)$(ProjectName).dll -&gt; $(PluginsPath)"
+		         Importance="High" />
+		<Copy SourceFiles="$(OutputPath)$(ProjectName).dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
+		<Copy SourceFiles="$(OutputPath)$(ProjectName).pdb" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
+		<!-- <Copy SourceFiles="$(OutputPath)Newtonsoft.Json.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+		<Copy SourceFiles="$(OutputPath)Archipelago.MultiClient.Net.dll" DestinationFolder="$(PluginsPath)"
+		      ContinueOnError="false" />
+		<Copy SourceFiles="$(OutputPath)KaitoKid.ArchipelagoUtilities.Net.dll" DestinationFolder="$(PluginsPath)"
+		      ContinueOnError="false" />
+		<!--<Copy SourceFiles="$(OutputPath)Archipelago.Gifting.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+		<!--<Copy SourceFiles="$(OutputPath)websocket-sharp.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+		<!--<Copy SourceFiles="$(OutputPath)SpriteSheetRuntime.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
+		<Copy SourceFiles="$(OutputPath)IdTables\kindergarten_2_item_table.json" DestinationFolder="$(PluginsPath)IdTables\"
+		      ContinueOnError="false" />
+		<Copy SourceFiles="$(OutputPath)IdTables\kindergarten_2_location_table.json"
+		      DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
+		<!--<Copy SourceFiles="$(OutputPath)Textures\Coins\cracked.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
+		<!--<Copy SourceFiles="$(OutputPath)Textures\Coins\piece.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
+		<!--<Copy SourceFiles="$(OutputPath)Textures\Coins\pile.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />-->
+		<Message Text="Copied mod files" Importance="High" />
+	</Target>
 </Project>
