@@ -70,7 +70,7 @@ namespace Archipelagarten2.Items
 
             for (var i = 0; i < environment.saveFile.Monstermon.Length; i++)
             {
-                environment.saveFile.Monstermon[i] = _archipelago.HasReceivedItem(MonstermonCards.CardNames[i]);
+                environment.saveFile.Monstermon[i] = _archipelago.HasReceivedItem(MonstermonCards.CardNames[i], true);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Archipelagarten2.Items
 
             for (var i = 0; i < environment.saveFile.Outfits.Length; i++)
             {
-                environment.saveFile.Outfits[i] = _archipelago.HasReceivedItem(Outfits.OutfitNames[i]);
+                environment.saveFile.Outfits[i] = _archipelago.HasReceivedItem(Outfits.OutfitNames[i], true);
             }
 
             var firstUnlockedOutfit = GetFirstUnlockedOutfit(environment);

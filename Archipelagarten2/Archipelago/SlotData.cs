@@ -22,7 +22,7 @@ namespace Archipelagarten2.Archipelago
         public int ShuffleMoney { get; private set; }
         public bool ShuffleMonstermon { get; private set; }
         public bool ShuffleOutfits { get; private set; }
-        public bool? DeathLink { get; private set; }
+        public bool DeathLink { get; private set; }
         public int Seed { get; private set; }
         public string MultiworldVersion { get; private set; }
 
