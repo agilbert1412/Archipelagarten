@@ -1,7 +1,7 @@
 ﻿using System;
 using KG2;
 using UnityEngine;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 using Object = UnityEngine.Object;
 
 namespace Archipelagarten2.UnityObjects

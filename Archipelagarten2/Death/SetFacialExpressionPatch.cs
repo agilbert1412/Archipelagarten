@@ -1,7 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 using KG2;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 
 namespace Archipelagarten2.Death
 {

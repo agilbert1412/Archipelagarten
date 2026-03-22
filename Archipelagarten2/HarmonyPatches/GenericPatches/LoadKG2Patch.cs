@@ -2,7 +2,7 @@
 using Archipelagarten2.Archipelago;
 using Archipelagarten2.UnityObjects;
 using HarmonyLib;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.GenericPatches

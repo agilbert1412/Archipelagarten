@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Archipelagarten2.Death;
 using Archipelagarten2.UnityObjects;
+using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace Archipelagarten2.Archipelago
 {
@@ -35,6 +36,11 @@ namespace Archipelagarten2.Archipelago
         {
             var fullMessage = string.Join(" ", message.Parts.Select(str => str.Text));
             Logger.LogInfo(fullMessage);
+        }
+
+        protected override void OnPacketReceived(ArchipelagoPacketBase packet)
+        {
+            return;
         }
 
         protected override void KillPlayerDeathLink(DeathLink deathLink)

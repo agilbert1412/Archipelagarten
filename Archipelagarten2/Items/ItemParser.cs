@@ -4,7 +4,7 @@ using Archipelagarten2.Constants;
 using Archipelagarten2.Death;
 using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.Items

@@ -1,7 +1,7 @@
 ﻿using System;
 using Archipelagarten2.Constants;
 using Archipelagarten2.UnityObjects;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.Death

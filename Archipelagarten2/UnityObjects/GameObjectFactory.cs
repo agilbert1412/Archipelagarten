@@ -5,7 +5,7 @@ using KG2;
 using Object = UnityEngine.Object;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 
 namespace Archipelagarten2.UnityObjects
 {

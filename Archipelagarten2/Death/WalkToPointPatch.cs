@@ -3,7 +3,7 @@ using DG.Tweening;
 using HarmonyLib;
 using KG2;
 using UnityEngine;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 
 namespace Archipelagarten2.Death
 {

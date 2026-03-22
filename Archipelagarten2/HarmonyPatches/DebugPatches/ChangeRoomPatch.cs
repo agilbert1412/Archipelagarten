@@ -1,6 +1,6 @@
 ﻿using System;
 using HarmonyLib;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using KG2;
 
 namespace Archipelagarten2.HarmonyPatches.DebugPatches

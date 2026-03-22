@@ -9,7 +9,7 @@ using Archipelagarten2.HarmonyPatches.MoneyPatches;
 using Archipelagarten2.UnityObjects;
 using KaitoKid.ArchipelagoUtilities.Net;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace Archipelagarten2.HarmonyPatches
 {

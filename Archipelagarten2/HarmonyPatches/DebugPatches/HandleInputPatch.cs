@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Archipelagarten2.Constants;
 using Archipelagarten2.Death;
 using Archipelagarten2.UnityObjects;
 using HarmonyLib;
-using Rewired;
 using UnityEngine;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
-using Object = UnityEngine.Object;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 using PlayerController = KG2.PlayerController;
 
 namespace Archipelagarten2.HarmonyPatches.DebugPatches

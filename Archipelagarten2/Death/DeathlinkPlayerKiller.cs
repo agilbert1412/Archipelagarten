@@ -8,7 +8,7 @@ using Archipelagarten2.UnityObjects;
 using DG.Tweening;
 using KG2;
 using UnityEngine;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 

@@ -13,9 +13,10 @@ using BepInEx;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Client.ConnectionResults;
 using Newtonsoft.Json;
 using UnityEngine;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 
 namespace Archipelagarten2
 {
@@ -82,16 +83,16 @@ namespace Archipelagarten2
         {
             ReadPersistentArchipelagoData();
 
-            var errorMessage = "";
+            ConnectionResult connectionResult = null;
             if (APConnectionInfo != null && !_archipelago.IsConnected)
             {
-                _archipelago.Connect(APConnectionInfo, out errorMessage);
+                connectionResult = _archipelago.ConnectToMultiworld(APConnectionInfo);
             }
 
-            if (!_archipelago.IsConnected)
+            if (!_archipelago.IsConnected || !connectionResult.Success)
             {
                 APConnectionInfo = null;
-                var userMessage = $"Could not connect to archipelago.{Environment.NewLine}Message: {errorMessage}{Environment.NewLine}Please verify the connection file ({Persistency.CONNECTION_FILE}) and that the server is available.{Environment.NewLine}";
+                var userMessage = $"Could not connect to archipelago.{Environment.NewLine}Message: {connectionResult.Message}{Environment.NewLine}Please verify the connection file ({Persistency.CONNECTION_FILE}) and that the server is available.{Environment.NewLine}";
                 Logger.LogError(userMessage);
                 const int timeUntilClose = 10;
                 Logger.LogError($"The Game will close in {timeUntilClose} seconds");
@@ -99,10 +100,13 @@ namespace Archipelagarten2
                 Application.Quit();
                 return;
             }
-            
-            Logger.LogMessage($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");
-            WritePersistentArchipelagoData();
-            // PatcherInitializer.InitializeEarly(Logger, _archipelago);
+
+            if (connectionResult.Success)
+            {
+                Logger.LogMessage($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");
+                WritePersistentArchipelagoData();
+                // PatcherInitializer.InitializeEarly(Logger, _archipelago);
+            }
         }
 
         private void ReadPersistentArchipelagoData()

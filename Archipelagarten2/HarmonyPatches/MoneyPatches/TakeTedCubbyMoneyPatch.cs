@@ -4,7 +4,7 @@ using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net;
 using KG2;
 using UnityEngine;
-using ILogger = KaitoKid.ArchipelagoUtilities.Net.Interfaces.ILogger;
+using ILogger = KaitoKid.Utilities.Interfaces.ILogger;
 
 namespace Archipelagarten2.HarmonyPatches.MoneyPatches
 {
